@@ -54,7 +54,7 @@ type Body struct {
 	Degree     float64 `xml:"degree,attr"`
 	DegreeUt   float64 `xml:"degree_ut,attr"`
 	Retrograde int     `xml:"retrograde,attr"`
-	ID         C.int32 `xml:"id,attr"`
+	ID         int     `xml:"id,attr"`
 }
 
 func normalize(angle float64) float64 {
@@ -135,7 +135,7 @@ func main() {
 						Degree:     degreeUt - degLow,
 						DegreeUt:   degreeUt,
 						Retrograde: retrograde,
-						ID:         body,
+						ID:         int(body),
 					},
 				)
 			}
