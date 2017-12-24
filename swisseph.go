@@ -36,6 +36,7 @@ type ChartInfo struct {
 	Houses  []House  `xml:"houses>House"`
 	Bodies  []Body   `xml:"bodies>Body"`
 	AscMCs  []AscMC  `xml:"ascmcs>AscMC"`
+	Aspects []Aspect `xml:"aspects>Aspect"`
 }
 
 type AscMC struct {
@@ -66,6 +67,14 @@ type Body struct {
 	ID         int     `xml:"id,attr"`
 }
 
+type Aspect struct {
+	XMLName xml.Name
+	Body1   string  `xml:"body1,attr"`
+	Body2   string  `xml:"body2,attr"`
+	Degree1 float64 `xml:"degree1,attr"`
+	Degree2 float64 `xml:"degree2,attr"`
+}
+
 func normalize(angle float64) float64 {
 	angle = math.Mod(angle, 360)
 	if angle < 0 {
@@ -73,6 +82,33 @@ func normalize(angle float64) float64 {
 	}
 	return angle
 }
+
+func test_aspect(body1 Body, body2 Body, deg1 float64, deg2 float64, delta float64, orb float64, t string) {
+	if (deg1 > (deg2+delta-orb) && deg1 < (deg2+delta+orb)) ||
+		(deg1 > (deg2-delta-orb) && deg1 < (deg2-delta+orb)) ||
+		(deg1 > (deg2+360+delta-orb) && deg1 < (deg2+360+delta+orb)) ||
+		(deg1 > (deg2-360+delta-orb) && deg1 < (deg2-360+delta+orb)) ||
+		(deg1 > (deg2+360-delta-orb) && deg1 < (deg2+360-delta+orb)) ||
+		(deg1 > (deg2-360-delta-orb) && deg1 < (deg2-360-delta+orb)) {
+		if deg1 > deg2 {
+			aspect(body1, body2, deg1, deg2, t)
+		}
+	}
+}
+
+func aspect(body1 Body, body2 Body, deg1 float64, deg2 float64, t string) {
+	chartinfo.Aspects = append(chartinfo.Aspects,
+		Aspect{
+			XMLName: xml.Name{Local: t},
+			Body1:   body1.XMLName.Local,
+			Body2:   body2.XMLName.Local,
+			Degree1: deg1,
+			Degree2: deg2,
+		},
+	)
+}
+
+var chartinfo = &ChartInfo{}
 
 func main() {
 
@@ -97,8 +133,6 @@ func main() {
 	C.swe_set_topo(43, 5, 0)
 
 	C.swe_houses(julday, 43.13517, 5.848, hsys, (*C.double)(&cusp[0]), (*C.double)(&ascmc[0]))
-
-	chartinfo := &ChartInfo{}
 
 	// AscMC
 	for index := 0; index < C.SE_NASCMC; index++ {
@@ -183,6 +217,22 @@ func main() {
 					},
 				)
 			}
+		}
+	}
+
+	for _, body1 := range chartinfo.Bodies {
+		deg1 := body1.DegreeUt - chartinfo.AscMCs[0].DegreeUt + 180
+
+		for _, body2 := range chartinfo.Bodies {
+			deg2 := body2.DegreeUt - chartinfo.AscMCs[0].DegreeUt + 180
+
+			test_aspect(body1, body2, deg1, deg2, 180, 10, "Opposition")
+			test_aspect(body1, body2, deg1, deg2, 150, 2, "Quincunx")
+			test_aspect(body1, body2, deg1, deg2, 120, 8, "Trine")
+			test_aspect(body1, body2, deg1, deg2, 90, 6, "Square")
+			test_aspect(body1, body2, deg1, deg2, 60, 4, "Sextile")
+			test_aspect(body1, body2, deg1, deg2, 30, 1, "Semi-sextile")
+			test_aspect(body1, body2, deg1, deg2, 0, 10, "Conjunction")
 		}
 	}
 
