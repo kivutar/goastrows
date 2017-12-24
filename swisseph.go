@@ -93,7 +93,7 @@ func normalize(angle float64) float64 {
 	return angle
 }
 
-func testAspect(body1 Body, body2 Body, deg1 float64, deg2 float64, delta float64, orb float64, t string) {
+func testAspect(ci *ChartInfo, body1 Body, body2 Body, deg1 float64, deg2 float64, delta float64, orb float64, t string) {
 	if (deg1 > (deg2+delta-orb) && deg1 < (deg2+delta+orb)) ||
 		(deg1 > (deg2-delta-orb) && deg1 < (deg2-delta+orb)) ||
 		(deg1 > (deg2+360+delta-orb) && deg1 < (deg2+360+delta+orb)) ||
@@ -101,13 +101,13 @@ func testAspect(body1 Body, body2 Body, deg1 float64, deg2 float64, delta float6
 		(deg1 > (deg2+360-delta-orb) && deg1 < (deg2+360-delta+orb)) ||
 		(deg1 > (deg2-360-delta-orb) && deg1 < (deg2-360-delta+orb)) {
 		if deg1 > deg2 {
-			aspect(body1, body2, deg1, deg2, t)
+			aspect(ci, body1, body2, deg1, deg2, t)
 		}
 	}
 }
 
-func aspect(body1 Body, body2 Body, deg1 float64, deg2 float64, t string) {
-	chartinfo.Aspects = append(chartinfo.Aspects,
+func aspect(ci *ChartInfo, body1 Body, body2 Body, deg1 float64, deg2 float64, t string) {
+	ci.Aspects = append(ci.Aspects,
 		Aspect{
 			XMLName: xml.Name{Local: t},
 			Body1:   body1.XMLName.Local,
@@ -118,12 +118,11 @@ func aspect(body1 Body, body2 Body, deg1 float64, deg2 float64, t string) {
 	)
 }
 
-var chartinfo = &ChartInfo{}
-
 func main() {
 
 	http.HandleFunc("/chartinfo", func(w http.ResponseWriter, r *http.Request) {
-		//fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+
+		var chartinfo = &ChartInfo{}
 
 		var xx [6]C.double
 		var serr string
@@ -133,13 +132,20 @@ func main() {
 		var ascmc [10]C.double
 		var hsys C.int = 'E'
 
+		if r.URL.Query().Get("hsys") != "" {
+			phsys := r.URL.Query().Get("hsys")
+			chsys := []rune(phsys)[0]
+			fmt.Println(chsys)
+			hsys = C.int(chsys)
+		}
+
 		// The number of houses is 12 except when using Gauquelin sectors
 		var numhouses = 12
 		if hsys == 'G' {
 			numhouses = 36
 		}
 
-		display := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 23}
+		display := []int{0, 1, 2, 3, 4}
 
 		julday = C.swe_julday(1984, 6, 8, 13.25, C.SE_GREG_CAL)
 
@@ -243,13 +249,13 @@ func main() {
 			for _, body2 := range chartinfo.Bodies {
 				deg2 := body2.DegreeUt - chartinfo.AscMCs[0].DegreeUt + 180
 
-				testAspect(body1, body2, deg1, deg2, 180, 10, "Opposition")
-				testAspect(body1, body2, deg1, deg2, 150, 2, "Quincunx")
-				testAspect(body1, body2, deg1, deg2, 120, 8, "Trine")
-				testAspect(body1, body2, deg1, deg2, 90, 6, "Square")
-				testAspect(body1, body2, deg1, deg2, 60, 4, "Sextile")
-				testAspect(body1, body2, deg1, deg2, 30, 1, "Semi-sextile")
-				testAspect(body1, body2, deg1, deg2, 0, 10, "Conjunction")
+				testAspect(chartinfo, body1, body2, deg1, deg2, 180, 10, "Opposition")
+				testAspect(chartinfo, body1, body2, deg1, deg2, 150, 2, "Quincunx")
+				testAspect(chartinfo, body1, body2, deg1, deg2, 120, 8, "Trine")
+				testAspect(chartinfo, body1, body2, deg1, deg2, 90, 6, "Square")
+				testAspect(chartinfo, body1, body2, deg1, deg2, 60, 4, "Sextile")
+				testAspect(chartinfo, body1, body2, deg1, deg2, 30, 1, "Semi-sextile")
+				testAspect(chartinfo, body1, body2, deg1, deg2, 0, 10, "Conjunction")
 			}
 		}
 
