@@ -75,6 +75,15 @@ type Aspect struct {
 	Degree2 float64 `xml:"degree2,attr"`
 }
 
+func contains(s []int, e int) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
 func normalize(angle float64) float64 {
 	angle = math.Mod(angle, 360)
 	if angle < 0 {
@@ -127,6 +136,8 @@ func main() {
 	if hsys == 'G' {
 		numhouses = 36
 	}
+
+	display := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 23}
 
 	julday = C.swe_julday(1984, 6, 8, 13.25, C.SE_GREG_CAL)
 
@@ -182,6 +193,10 @@ func main() {
 
 	// Bodies
 	for body := C.int32(0); body < C.SE_NPLANETS+2; body++ {
+
+		if !contains(display[:], int(body)) {
+			break
+		}
 
 		var degreeUt float64
 		if body == 23 {
