@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"strconv"
 )
 
 /*
@@ -131,12 +132,21 @@ func main() {
 		var cusp [37]C.double
 		var ascmc [10]C.double
 		var hsys C.int = 'E'
+		var year C.int = 1970
+		display := []int{0, 1, 2, 3, 4}
 
 		if r.URL.Query().Get("hsys") != "" {
-			phsys := r.URL.Query().Get("hsys")
-			chsys := []rune(phsys)[0]
-			fmt.Println(chsys)
-			hsys = C.int(chsys)
+			hsys = C.int([]rune(r.URL.Query().Get("hsys"))[0])
+		}
+
+		if r.URL.Query().Get("year") != "" {
+			i, err := strconv.ParseInt(r.URL.Query().Get("year"), 10, 64)
+
+			if err != nil {
+				fmt.Printf("error: %v\n", err)
+			}
+
+			year = C.int(i)
 		}
 
 		// The number of houses is 12 except when using Gauquelin sectors
@@ -145,9 +155,7 @@ func main() {
 			numhouses = 36
 		}
 
-		display := []int{0, 1, 2, 3, 4}
-
-		julday = C.swe_julday(1984, 6, 8, 13.25, C.SE_GREG_CAL)
+		julday = C.swe_julday(year, 6, 8, 13.25, C.SE_GREG_CAL)
 
 		C.swe_set_topo(43, 5, 0)
 
@@ -243,6 +251,7 @@ func main() {
 			}
 		}
 
+		// Ascpects
 		for _, body1 := range chartinfo.Bodies {
 			deg1 := body1.DegreeUt - chartinfo.AscMCs[0].DegreeUt + 180
 
