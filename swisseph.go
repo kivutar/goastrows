@@ -8,8 +8,8 @@ import (
 )
 
 /*
-#include "swephexp.h"
-#cgo LDFLAGS: -L. -lswe -lm -ldl
+#include "swe/swephexp.h"
+#cgo LDFLAGS: -Lswe -lswe -lm -ldl
 */
 import "C"
 
