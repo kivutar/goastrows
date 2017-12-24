@@ -24,9 +24,8 @@ var hnames = []string{"0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII",
 	"XX", "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII",
 	"XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI"}
 
-/*var anames = []string{"Ascendant", "MC", "ARMC", "Vertex",
-"EquatorialAscendant", "Co-Ascendant1", "Co-Ascendant2", "PolarAscendant",
-"NASCMC"}*/
+var anames = []string{"Ascendant", "MC", "ARMC", "Vertex",
+	"EquatorialAscendant", "Co-Ascendant1", "Co-Ascendant2", "PolarAscendant"}
 
 var snames = []string{"Aries", "Taurus", "Gemini", "Cancer", "Leo",
 	"Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius",
@@ -36,6 +35,16 @@ type ChartInfo struct {
 	XMLName xml.Name `xml:"chartinfo"`
 	Houses  []House  `xml:"houses>House"`
 	Bodies  []Body   `xml:"bodies>Body"`
+	AscMCs  []AscMC  `xml:"ascmcs>AscMC"`
+}
+
+type AscMC struct {
+	XMLName  xml.Name
+	ID       int     `xml:"id,attr"`
+	Sign     int     `xml:"sign,attr"`
+	SignName string  `xml:"sign_name,attr"`
+	Degree   float64 `xml:"degree,attr"`
+	DegreeUt float64 `xml:"degree_ut,attr"`
 }
 
 type House struct {
@@ -91,6 +100,30 @@ func main() {
 
 	chartinfo := &ChartInfo{}
 
+	// AscMC
+	for index := 0; index < C.SE_NASCMC; index++ {
+		degreeUt := float64(ascmc[index])
+
+		for sign := 0; sign < 12; sign++ {
+			degLow := float64(sign * 30)
+			degHigh := float64((sign + 1) * 30)
+			if degreeUt >= degLow && degreeUt <= degHigh {
+
+				chartinfo.AscMCs = append(chartinfo.AscMCs,
+					AscMC{
+						XMLName:  xml.Name{Local: anames[index]},
+						ID:       index + 1,
+						Sign:     sign,
+						SignName: snames[sign],
+						Degree:   degreeUt - degLow,
+						DegreeUt: degreeUt,
+					},
+				)
+			}
+		}
+	}
+
+	// Houses
 	for house := 1; house <= numhouses; house++ {
 		degreeUt := float64(cusp[house])
 
@@ -113,6 +146,7 @@ func main() {
 		}
 	}
 
+	// Bodies
 	for body := C.int32(0); body < C.SE_NPLANETS+2; body++ {
 
 		var degreeUt float64
