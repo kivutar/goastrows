@@ -113,9 +113,19 @@ func main() {
 		}
 	}
 
-	for body := C.int32(0); body <= C.SE_EARTH; body++ {
-		C.swe_calc_ut(julday, body, 0, &xx[0], serrC)
-		degreeUt := float64(xx[0])
+	for body := C.int32(0); body < C.SE_NPLANETS+2; body++ {
+
+		var degreeUt float64
+		if body == 23 {
+			C.swe_calc_ut(julday, body, 10, &xx[0], serrC)
+			degreeUt = normalize(float64(xx[0]) + 180)
+		} else if body == 24 {
+			C.swe_calc_ut(julday, 11, 0, &xx[0], serrC)
+			degreeUt = normalize(float64(xx[0]) + 180)
+		} else {
+			C.swe_calc_ut(julday, body, 0, &xx[0], serrC)
+			degreeUt = float64(xx[0])
+		}
 
 		retrograde := 0
 		if xx[3] < 0 {
