@@ -39,26 +39,26 @@ type ChartInfo struct {
 }
 
 type House struct {
-	SignName string   `xml:"sign_name,attr"`
-	Degree   C.double `xml:"degree,attr"`
-	Number   string   `xml:"number,attr"`
-	Sign     int      `xml:"sign,attr"`
-	House    int      `xml:"house,attr"`
-	DegreeUt C.double `xml:"degree_ut,attr"`
+	SignName string  `xml:"sign_name,attr"`
+	Degree   float64 `xml:"degree,attr"`
+	Number   string  `xml:"number,attr"`
+	Sign     int     `xml:"sign,attr"`
+	House    int     `xml:"house,attr"`
+	DegreeUt float64 `xml:"degree_ut,attr"`
 }
 
 type Body struct {
 	XMLName    xml.Name
-	Sign       int      `xml:"sign,attr"`
-	SignName   string   `xml:"sign_name,attr"`
-	Degree     C.double `xml:"degree,attr"`
-	DegreeUt   C.double `xml:"degree_ut,attr"`
-	Retrograde int      `xml:"retrograde,attr"`
-	ID         C.int32  `xml:"id,attr"`
+	Sign       int     `xml:"sign,attr"`
+	SignName   string  `xml:"sign_name,attr"`
+	Degree     float64 `xml:"degree,attr"`
+	DegreeUt   float64 `xml:"degree_ut,attr"`
+	Retrograde int     `xml:"retrograde,attr"`
+	ID         C.int32 `xml:"id,attr"`
 }
 
-func normalize(angle C.double) C.double {
-	angle = C.double(math.Mod(float64(angle), 360))
+func normalize(angle float64) float64 {
+	angle = math.Mod(angle, 360)
 	if angle < 0 {
 		angle += 360
 	}
@@ -92,11 +92,11 @@ func main() {
 	chartinfo := &ChartInfo{}
 
 	for house := 1; house <= numhouses; house++ {
-		var degreeUt = cusp[house]
+		degreeUt := float64(cusp[house])
 
 		for sign := 0; sign < 12; sign++ {
-			var degLow C.double = C.double(sign * 30)
-			var degHigh C.double = C.double((sign + 1) * 30)
+			degLow := float64(sign * 30)
+			degHigh := float64((sign + 1) * 30)
 			if degreeUt >= degLow && degreeUt <= degHigh {
 
 				chartinfo.Houses = append(chartinfo.Houses,
@@ -115,15 +115,16 @@ func main() {
 
 	for body := C.int32(0); body <= C.SE_EARTH; body++ {
 		C.swe_calc_ut(julday, body, 0, &xx[0], serrC)
-		var degreeUt = xx[0]
-		var retrograde = 0
+		degreeUt := float64(xx[0])
+
+		retrograde := 0
 		if xx[3] < 0 {
 			retrograde = 1
 		}
 
 		for sign := 0; sign < 12; sign++ {
-			var degLow C.double = C.double(sign * 30)
-			var degHigh C.double = C.double((sign + 1) * 30)
+			degLow := float64(sign * 30)
+			degHigh := float64((sign + 1) * 30)
 			if degreeUt >= degLow && degreeUt <= degHigh {
 
 				chartinfo.Bodies = append(chartinfo.Bodies,
