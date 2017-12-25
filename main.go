@@ -134,6 +134,7 @@ func main() {
 		var ascmc [10]C.double
 		var hsys C.int = 'E'
 		var year C.int = 1970
+		var month C.int = 1
 		display := []int{0, 1, 2, 3, 4}
 
 		if r.URL.Query().Get("hsys") != "" {
@@ -150,13 +151,23 @@ func main() {
 			year = C.int(i)
 		}
 
+		if r.URL.Query().Get("month") != "" {
+			i, err := strconv.ParseInt(r.URL.Query().Get("month"), 10, 64)
+
+			if err != nil {
+				fmt.Printf("error: %v\n", err)
+			}
+
+			month = C.int(i)
+		}
+
 		// The number of houses is 12 except when using Gauquelin sectors
 		var numhouses = 12
 		if hsys == 'G' {
 			numhouses = 36
 		}
 
-		julday = C.swe_julday(year, 6, 8, 13.25, C.SE_GREG_CAL)
+		julday = C.swe_julday(year, month, 8, 13.25, C.SE_GREG_CAL)
 
 		C.swe_set_topo(43, 5, 0)
 
