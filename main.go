@@ -124,170 +124,171 @@ func aspect(ci *ChartInfo, body1 Body, body2 Body, deg1 float64, deg2 float64, t
 	)
 }
 
-func main() {
+func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
+	var chartinfo = &ChartInfo{}
 
-	http.HandleFunc("/chartinfo", func(w http.ResponseWriter, r *http.Request) {
+	var xx [6]C.double
+	serr := make([]byte, 256)
+	var julday C.double
+	var cusp [37]C.double
+	var ascmc [10]C.double
+	var hsys int = 'E'
+	chartinfo.Year = 1970
+	chartinfo.Month = 1
+	display := []int{0, 1, 2, 3, 4}
 
-		var chartinfo = &ChartInfo{}
+	if r.URL.Query().Get("hsys") != "" {
+		hsys = int([]rune(r.URL.Query().Get("hsys"))[0])
+	}
 
-		var xx [6]C.double
-		serr := make([]byte, 256)
-		var julday C.double
-		var cusp [37]C.double
-		var ascmc [10]C.double
-		var hsys int = 'E'
-		chartinfo.Year = 1970
-		chartinfo.Month = 1
-		display := []int{0, 1, 2, 3, 4}
+	if r.URL.Query().Get("year") != "" {
+		i, err := strconv.ParseInt(r.URL.Query().Get("year"), 10, 64)
 
-		if r.URL.Query().Get("hsys") != "" {
-			hsys = int([]rune(r.URL.Query().Get("hsys"))[0])
-		}
-
-		if r.URL.Query().Get("year") != "" {
-			i, err := strconv.ParseInt(r.URL.Query().Get("year"), 10, 64)
-
-			if err != nil {
-				fmt.Printf("error: %v\n", err)
-			}
-
-			chartinfo.Year = i
-		}
-
-		if r.URL.Query().Get("month") != "" {
-			i, err := strconv.ParseInt(r.URL.Query().Get("month"), 10, 64)
-
-			if err != nil {
-				fmt.Printf("error: %v\n", err)
-			}
-
-			chartinfo.Month = i
-		}
-
-		// The number of houses is 12 except when using Gauquelin sectors
-		var numhouses = 12
-		if hsys == 'G' {
-			numhouses = 36
-		}
-
-		julday = C.swe_julday(C.int(chartinfo.Year), C.int(chartinfo.Month), 8, 13.25, C.SE_GREG_CAL)
-
-		C.swe_set_topo(43.13517, 5.848, 0)
-
-		C.swe_houses(julday, 43.13517, 5.848, C.int(hsys), (*C.double)(&cusp[0]), (*C.double)(&ascmc[0]))
-
-		// AscMC
-		for index := 0; index < C.SE_NASCMC; index++ {
-			degreeUt := float64(ascmc[index])
-
-			for sign := 0; sign < 12; sign++ {
-				degLow := float64(sign * 30)
-				degHigh := float64((sign + 1) * 30)
-				if degreeUt >= degLow && degreeUt <= degHigh {
-
-					chartinfo.AscMCs = append(chartinfo.AscMCs,
-						AscMC{
-							XMLName:  xml.Name{Local: anames[index]},
-							ID:       index + 1,
-							Sign:     sign,
-							SignName: snames[sign],
-							Degree:   degreeUt - degLow,
-							DegreeUt: degreeUt,
-						},
-					)
-				}
-			}
-		}
-
-		// Houses
-		for house := 1; house <= numhouses; house++ {
-			degreeUt := float64(cusp[house])
-
-			for sign := 0; sign < 12; sign++ {
-				degLow := float64(sign * 30)
-				degHigh := float64((sign + 1) * 30)
-				if degreeUt >= degLow && degreeUt <= degHigh {
-
-					chartinfo.Houses = append(chartinfo.Houses,
-						House{
-							SignName: snames[sign],
-							Degree:   degreeUt - degLow,
-							Number:   hnames[house],
-							Sign:     sign,
-							House:    house,
-							DegreeUt: degreeUt,
-						},
-					)
-				}
-			}
-		}
-
-		// Bodies
-		for body := C.int32(0); body < C.SE_NPLANETS+2; body++ {
-
-			if !contains(display[:], int(body)) {
-				break
-			}
-
-			var degreeUt float64
-			if body == 23 {
-				C.swe_calc_ut(julday, body, 10, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
-				degreeUt = normalize(float64(xx[0]) + 180)
-			} else if body == 24 {
-				C.swe_calc_ut(julday, 11, 0, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
-				degreeUt = normalize(float64(xx[0]) + 180)
-			} else {
-				C.swe_calc_ut(julday, body, 0, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
-				degreeUt = float64(xx[0])
-			}
-
-			retrograde := xx[3] < 0
-
-			for sign := 0; sign < 12; sign++ {
-				degLow := float64(sign * 30)
-				degHigh := float64((sign + 1) * 30)
-				if degreeUt >= degLow && degreeUt <= degHigh {
-
-					chartinfo.Bodies = append(chartinfo.Bodies,
-						Body{
-							XMLName:    xml.Name{Local: bnames[body]},
-							Sign:       sign,
-							SignName:   snames[sign],
-							Degree:     degreeUt - degLow,
-							DegreeUt:   degreeUt,
-							Retrograde: retrograde,
-							ID:         int(body),
-						},
-					)
-				}
-			}
-		}
-
-		// Ascpects
-		for _, body1 := range chartinfo.Bodies {
-			deg1 := body1.DegreeUt - chartinfo.AscMCs[0].DegreeUt + 180
-
-			for _, body2 := range chartinfo.Bodies {
-				deg2 := body2.DegreeUt - chartinfo.AscMCs[0].DegreeUt + 180
-
-				testAspect(chartinfo, body1, body2, deg1, deg2, 180, 10, "Opposition")
-				testAspect(chartinfo, body1, body2, deg1, deg2, 150, 2, "Quincunx")
-				testAspect(chartinfo, body1, body2, deg1, deg2, 120, 8, "Trine")
-				testAspect(chartinfo, body1, body2, deg1, deg2, 90, 6, "Square")
-				testAspect(chartinfo, body1, body2, deg1, deg2, 60, 4, "Sextile")
-				testAspect(chartinfo, body1, body2, deg1, deg2, 30, 1, "Semi-sextile")
-				testAspect(chartinfo, body1, body2, deg1, deg2, 0, 10, "Conjunction")
-			}
-		}
-
-		out, err := xml.MarshalIndent(chartinfo, "", "  ")
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
 		}
 
-		w.Header().Set("Content-Type", "application/xml")
-		w.Write(out)
-	})
+		chartinfo.Year = i
+	}
+
+	if r.URL.Query().Get("month") != "" {
+		i, err := strconv.ParseInt(r.URL.Query().Get("month"), 10, 64)
+
+		if err != nil {
+			fmt.Printf("error: %v\n", err)
+		}
+
+		chartinfo.Month = i
+	}
+
+	// The number of houses is 12 except when using Gauquelin sectors
+	var numhouses = 12
+	if hsys == 'G' {
+		numhouses = 36
+	}
+
+	julday = C.swe_julday(C.int(chartinfo.Year), C.int(chartinfo.Month), 8, 13.25, C.SE_GREG_CAL)
+
+	C.swe_set_topo(43.13517, 5.848, 0)
+
+	C.swe_houses(julday, 43.13517, 5.848, C.int(hsys), (*C.double)(&cusp[0]), (*C.double)(&ascmc[0]))
+
+	// AscMC
+	for index := 0; index < C.SE_NASCMC; index++ {
+		degreeUt := float64(ascmc[index])
+
+		for sign := 0; sign < 12; sign++ {
+			degLow := float64(sign * 30)
+			degHigh := float64((sign + 1) * 30)
+			if degreeUt >= degLow && degreeUt <= degHigh {
+
+				chartinfo.AscMCs = append(chartinfo.AscMCs,
+					AscMC{
+						XMLName:  xml.Name{Local: anames[index]},
+						ID:       index + 1,
+						Sign:     sign,
+						SignName: snames[sign],
+						Degree:   degreeUt - degLow,
+						DegreeUt: degreeUt,
+					},
+				)
+			}
+		}
+	}
+
+	// Houses
+	for house := 1; house <= numhouses; house++ {
+		degreeUt := float64(cusp[house])
+
+		for sign := 0; sign < 12; sign++ {
+			degLow := float64(sign * 30)
+			degHigh := float64((sign + 1) * 30)
+			if degreeUt >= degLow && degreeUt <= degHigh {
+
+				chartinfo.Houses = append(chartinfo.Houses,
+					House{
+						SignName: snames[sign],
+						Degree:   degreeUt - degLow,
+						Number:   hnames[house],
+						Sign:     sign,
+						House:    house,
+						DegreeUt: degreeUt,
+					},
+				)
+			}
+		}
+	}
+
+	// Bodies
+	for body := C.int32(0); body < C.SE_NPLANETS+2; body++ {
+
+		if !contains(display[:], int(body)) {
+			break
+		}
+
+		var degreeUt float64
+		if body == 23 {
+			C.swe_calc_ut(julday, body, 10, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
+			degreeUt = normalize(float64(xx[0]) + 180)
+		} else if body == 24 {
+			C.swe_calc_ut(julday, 11, 0, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
+			degreeUt = normalize(float64(xx[0]) + 180)
+		} else {
+			C.swe_calc_ut(julday, body, 0, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
+			degreeUt = float64(xx[0])
+		}
+
+		retrograde := xx[3] < 0
+
+		for sign := 0; sign < 12; sign++ {
+			degLow := float64(sign * 30)
+			degHigh := float64((sign + 1) * 30)
+			if degreeUt >= degLow && degreeUt <= degHigh {
+
+				chartinfo.Bodies = append(chartinfo.Bodies,
+					Body{
+						XMLName:    xml.Name{Local: bnames[body]},
+						Sign:       sign,
+						SignName:   snames[sign],
+						Degree:     degreeUt - degLow,
+						DegreeUt:   degreeUt,
+						Retrograde: retrograde,
+						ID:         int(body),
+					},
+				)
+			}
+		}
+	}
+
+	// Ascpects
+	for _, body1 := range chartinfo.Bodies {
+		deg1 := body1.DegreeUt - chartinfo.AscMCs[0].DegreeUt + 180
+
+		for _, body2 := range chartinfo.Bodies {
+			deg2 := body2.DegreeUt - chartinfo.AscMCs[0].DegreeUt + 180
+
+			testAspect(chartinfo, body1, body2, deg1, deg2, 180, 10, "Opposition")
+			testAspect(chartinfo, body1, body2, deg1, deg2, 150, 2, "Quincunx")
+			testAspect(chartinfo, body1, body2, deg1, deg2, 120, 8, "Trine")
+			testAspect(chartinfo, body1, body2, deg1, deg2, 90, 6, "Square")
+			testAspect(chartinfo, body1, body2, deg1, deg2, 60, 4, "Sextile")
+			testAspect(chartinfo, body1, body2, deg1, deg2, 30, 1, "Semi-sextile")
+			testAspect(chartinfo, body1, body2, deg1, deg2, 0, 10, "Conjunction")
+		}
+	}
+
+	out, err := xml.MarshalIndent(chartinfo, "", "  ")
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+	}
+
+	w.Header().Set("Content-Type", "application/xml")
+	w.Write(out)
+}
+
+func main() {
+
+	http.HandleFunc("/chartinfo", ChartInfoHandler)
 
 	port := os.Getenv("PORT")
 
