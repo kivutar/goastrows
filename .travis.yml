@@ -4,5 +4,4 @@ go:
   - 1.9.2
 
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libswe
+  - make -C swe
