@@ -40,6 +40,8 @@ type ChartInfo struct {
 	Bodies  []Body   `xml:"bodies>Body"`
 	AscMCs  []AscMC  `xml:"ascmcs>AscMC"`
 	Aspects []Aspect `xml:"aspects>Aspect"`
+	Year    int64    `xml:"year,attr"`
+	Month   int64    `xml:"month,attr"`
 }
 
 type AscMC struct {
@@ -133,8 +135,8 @@ func main() {
 		var cusp [37]C.double
 		var ascmc [10]C.double
 		var hsys C.int = 'E'
-		var year C.int = 1970
-		var month C.int = 1
+		chartinfo.Year = 1970
+		chartinfo.Month = 1
 		display := []int{0, 1, 2, 3, 4}
 
 		if r.URL.Query().Get("hsys") != "" {
@@ -148,7 +150,7 @@ func main() {
 				fmt.Printf("error: %v\n", err)
 			}
 
-			year = C.int(i)
+			chartinfo.Year = i
 		}
 
 		if r.URL.Query().Get("month") != "" {
@@ -158,7 +160,7 @@ func main() {
 				fmt.Printf("error: %v\n", err)
 			}
 
-			month = C.int(i)
+			chartinfo.Month = i
 		}
 
 		// The number of houses is 12 except when using Gauquelin sectors
@@ -167,7 +169,7 @@ func main() {
 			numhouses = 36
 		}
 
-		julday = C.swe_julday(year, month, 8, 13.25, C.SE_GREG_CAL)
+		julday = C.swe_julday(C.int(chartinfo.Year), C.int(chartinfo.Month), 8, 13.25, C.SE_GREG_CAL)
 
 		C.swe_set_topo(43, 5, 0)
 
