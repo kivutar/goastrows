@@ -1,6 +1,6 @@
 GO_BUILD_ENV := CGO_ENABLED=1 GOOS=linux GOARCH=amd64
 DOCKER_BUILD=$(shell pwd)/.docker_build
-DOCKER_CMD=$(DOCKER_BUILD)/go-getting-started
+DOCKER_CMD=$(DOCKER_BUILD)/goastrows
 
 $(DOCKER_CMD): clean
 	mkdir -p $(DOCKER_BUILD)
