@@ -131,14 +131,7 @@ func main() {
 		var chartinfo = &ChartInfo{}
 
 		var xx [6]C.double
-		//var serr string
-		//var serrC *C.char = C.CString(serr)
-
-		// buf := new(bytes.Buffer)
-		// str := buf.String()
-		// serrC := unsafe.Pointer(C.CString(str))
-		serr := make([]byte, 8192)
-
+		serr := make([]byte, 256)
 		var julday C.double
 		var cusp [37]C.double
 		var ascmc [10]C.double
