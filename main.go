@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/xml"
 	"fmt"
 	"log"
@@ -135,9 +134,10 @@ func main() {
 		//var serr string
 		//var serrC *C.char = C.CString(serr)
 
-		buf := new(bytes.Buffer)
-		str := buf.String()
-		serrC := unsafe.Pointer(C.CString(str))
+		// buf := new(bytes.Buffer)
+		// str := buf.String()
+		// serrC := unsafe.Pointer(C.CString(str))
+		serr := make([]byte, 8192)
 
 		var julday C.double
 		var cusp [37]C.double
@@ -238,13 +238,13 @@ func main() {
 
 			var degreeUt float64
 			if body == 23 {
-				C.swe_calc_ut(julday, body, 10, &xx[0], (*C.char)(serrC))
+				C.swe_calc_ut(julday, body, 10, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
 				degreeUt = normalize(float64(xx[0]) + 180)
 			} else if body == 24 {
-				C.swe_calc_ut(julday, 11, 0, &xx[0], (*C.char)(serrC))
+				C.swe_calc_ut(julday, 11, 0, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
 				degreeUt = normalize(float64(xx[0]) + 180)
 			} else {
-				C.swe_calc_ut(julday, body, 0, &xx[0], (*C.char)(serrC))
+				C.swe_calc_ut(julday, body, 0, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
 				degreeUt = float64(xx[0])
 			}
 
