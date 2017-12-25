@@ -286,8 +286,6 @@ func main() {
 
 		w.Header().Set("Content-Type", "application/xml")
 		w.Write(out)
-
-		C.swe_close()
 	})
 
 	port := os.Getenv("PORT")
@@ -298,4 +296,6 @@ func main() {
 	}
 
 	log.Fatal(http.ListenAndServe(":"+port, nil))
+
+	C.swe_close()
 }
