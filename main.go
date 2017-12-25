@@ -134,13 +134,13 @@ func main() {
 		var julday C.double
 		var cusp [37]C.double
 		var ascmc [10]C.double
-		var hsys C.int = 'E'
+		var hsys int = 'E'
 		chartinfo.Year = 1970
 		chartinfo.Month = 1
 		display := []int{0, 1, 2, 3, 4}
 
 		if r.URL.Query().Get("hsys") != "" {
-			hsys = C.int([]rune(r.URL.Query().Get("hsys"))[0])
+			hsys = int([]rune(r.URL.Query().Get("hsys"))[0])
 		}
 
 		if r.URL.Query().Get("year") != "" {
@@ -173,7 +173,7 @@ func main() {
 
 		C.swe_set_topo(43, 5, 0)
 
-		C.swe_houses(julday, 43.13517, 5.848, hsys, (*C.double)(&cusp[0]), (*C.double)(&ascmc[0]))
+		C.swe_houses(julday, 43.13517, 5.848, C.int(hsys), (*C.double)(&cusp[0]), (*C.double)(&ascmc[0]))
 
 		// AscMC
 		for index := 0; index < C.SE_NASCMC; index++ {
