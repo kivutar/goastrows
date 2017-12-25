@@ -1,2 +1,4 @@
 .DS_Store
 *.o
+swe/libswe.a
+swe/swetest
