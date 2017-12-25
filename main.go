@@ -66,7 +66,7 @@ type Body struct {
 	SignName   string  `xml:"sign_name,attr"`
 	Degree     float64 `xml:"degree,attr"`
 	DegreeUt   float64 `xml:"degree_ut,attr"`
-	Retrograde int     `xml:"retrograde,attr"`
+	Retrograde bool    `xml:"retrograde,attr"`
 	ID         int     `xml:"id,attr"`
 }
 
@@ -238,10 +238,7 @@ func main() {
 				degreeUt = float64(xx[0])
 			}
 
-			retrograde := 0
-			if xx[3] < 0 {
-				retrograde = 1
-			}
+			retrograde := xx[3] < 0
 
 			for sign := 0; sign < 12; sign++ {
 				degLow := float64(sign * 30)
