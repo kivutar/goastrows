@@ -5,6 +5,7 @@ DOCKER_CMD=$(DOCKER_BUILD)/goastrows
 $(DOCKER_CMD): clean
 	mkdir -p $(DOCKER_BUILD)
 	$(GO_BUILD_ENV) go build -v -o $(DOCKER_CMD) .
+	go test -v ./...
 
 clean:
 	rm -rf $(DOCKER_BUILD)
