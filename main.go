@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/xml"
 	"fmt"
 	"log"
@@ -8,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"unsafe"
 )
 
 /*
@@ -130,8 +132,13 @@ func main() {
 		var chartinfo = &ChartInfo{}
 
 		var xx [6]C.double
-		var serr string
-		var serrC *C.char = C.CString(serr)
+		//var serr string
+		//var serrC *C.char = C.CString(serr)
+
+		buf := new(bytes.Buffer)
+		str := buf.String()
+		serrC := unsafe.Pointer(C.CString(str))
+
 		var julday C.double
 		var cusp [37]C.double
 		var ascmc [10]C.double
@@ -231,13 +238,13 @@ func main() {
 
 			var degreeUt float64
 			if body == 23 {
-				C.swe_calc_ut(julday, body, 10, &xx[0], serrC)
+				C.swe_calc_ut(julday, body, 10, &xx[0], (*C.char)(serrC))
 				degreeUt = normalize(float64(xx[0]) + 180)
 			} else if body == 24 {
-				C.swe_calc_ut(julday, 11, 0, &xx[0], serrC)
+				C.swe_calc_ut(julday, 11, 0, &xx[0], (*C.char)(serrC))
 				degreeUt = normalize(float64(xx[0]) + 180)
 			} else {
-				C.swe_calc_ut(julday, body, 0, &xx[0], serrC)
+				C.swe_calc_ut(julday, body, 0, &xx[0], (*C.char)(serrC))
 				degreeUt = float64(xx[0])
 			}
 
