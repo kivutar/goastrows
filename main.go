@@ -296,6 +296,4 @@ func main() {
 	}
 
 	log.Fatal(http.ListenAndServe(":"+port, nil))
-
-	C.swe_close()
 }
