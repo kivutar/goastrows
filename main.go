@@ -11,6 +11,7 @@ import (
 
 /*
 #include "swe/swephexp.h"
+#cgo CFLAGS: -I${SRCDIR}/swe
 #cgo LDFLAGS: -L${SRCDIR}/swe -lswe -lm -ldl
 */
 import "C"
