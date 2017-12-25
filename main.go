@@ -172,7 +172,7 @@ func main() {
 
 		julday = C.swe_julday(C.int(chartinfo.Year), C.int(chartinfo.Month), 8, 13.25, C.SE_GREG_CAL)
 
-		C.swe_set_topo(43, 5, 0)
+		C.swe_set_topo(43.13517, 5.848, 0)
 
 		C.swe_houses(julday, 43.13517, 5.848, C.int(hsys), (*C.double)(&cusp[0]), (*C.double)(&ascmc[0]))
 
