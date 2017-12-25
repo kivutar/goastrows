@@ -13,7 +13,7 @@ import (
 /*
 #include "swephexp.h"
 #cgo CFLAGS: -Iswe
-#cgo LDFLAGS: -lswe -lm -ldl
+#cgo LDFLAGS: -Lswe -lswe -lm -ldl
 */
 import "C"
 
