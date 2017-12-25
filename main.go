@@ -44,6 +44,7 @@ type ChartInfo struct {
 	Aspects []Aspect `xml:"aspects>Aspect"`
 	Year    int64    `xml:"year,attr"`
 	Month   int64    `xml:"month,attr"`
+	Day     int64    `xml:"day,attr"`
 }
 
 type AscMC struct {
@@ -135,6 +136,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	var hsys int = 'E'
 	chartinfo.Year = 1970
 	chartinfo.Month = 1
+	chartinfo.Day = 1
 	display := []int{0, 1, 2, 3, 4}
 
 	if r.URL.Query().Get("hsys") != "" {
@@ -161,13 +163,23 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		chartinfo.Month = i
 	}
 
+	if r.URL.Query().Get("day") != "" {
+		i, err := strconv.ParseInt(r.URL.Query().Get("day"), 10, 64)
+
+		if err != nil {
+			fmt.Printf("error: %v\n", err)
+		}
+
+		chartinfo.Day = i
+	}
+
 	// The number of houses is 12 except when using Gauquelin sectors
 	var numhouses = 12
 	if hsys == 'G' {
 		numhouses = 36
 	}
 
-	julday = C.swe_julday(C.int(chartinfo.Year), C.int(chartinfo.Month), 8, 13.25, C.SE_GREG_CAL)
+	julday = C.swe_julday(C.int(chartinfo.Year), C.int(chartinfo.Month), C.int(chartinfo.Day), 13.25, C.SE_GREG_CAL)
 
 	C.swe_set_topo(43.13517, 5.848, 0)
 
