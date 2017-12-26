@@ -72,6 +72,7 @@ type House struct {
 	DegreeUt float64 `xml:"degree_ut,attr"`
 }
 
+// Body represent a planet, a fictional planet or an asteroid
 type Body struct {
 	XMLName    xml.Name
 	Sign       int     `xml:"sign,attr"`
@@ -144,6 +145,7 @@ func aspect(ci *ChartInfo, body1 Body, body2 Body, deg1 float64, deg2 float64, t
 	)
 }
 
+// ChartInfoHandler returns houses and planet positions for a location and time
 func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	var c = &ChartInfo{}
 
