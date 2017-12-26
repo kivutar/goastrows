@@ -129,7 +129,7 @@ func aspect(ci *ChartInfo, body1 Body, body2 Body, deg1 float64, deg2 float64, t
 }
 
 func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
-	var chartinfo = &ChartInfo{}
+	var c = &ChartInfo{}
 
 	var xx [6]C.double
 	serr := make([]byte, 256)
@@ -137,9 +137,9 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	var cusp [37]C.double
 	var ascmc [10]C.double
 	var hsys int = 'E'
-	chartinfo.Year = 1970
-	chartinfo.Month = 1
-	chartinfo.Day = 1
+	c.Year = 1970
+	c.Month = 1
+	c.Day = 1
 	display := []int{0, 1, 2, 3, 4}
 
 	if r.URL.Query().Get("hsys") != "" {
@@ -153,7 +153,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Printf("error: %v\n", err)
 		}
 
-		chartinfo.Year = i
+		c.Year = i
 	}
 
 	if r.URL.Query().Get("month") != "" {
@@ -163,7 +163,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Printf("error: %v\n", err)
 		}
 
-		chartinfo.Month = i
+		c.Month = i
 	}
 
 	if r.URL.Query().Get("day") != "" {
@@ -173,7 +173,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Printf("error: %v\n", err)
 		}
 
-		chartinfo.Day = i
+		c.Day = i
 	}
 
 	if r.URL.Query().Get("time") != "" {
@@ -183,11 +183,11 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Printf("error: %v\n", err)
 		}
 
-		chartinfo.Time = i
+		c.Time = i
 	}
 
-	chartinfo.Name = r.URL.Query().Get("name")
-	chartinfo.City = r.URL.Query().Get("city")
+	c.Name = r.URL.Query().Get("name")
+	c.City = r.URL.Query().Get("city")
 
 	// The number of houses is 12 except when using Gauquelin sectors
 	var numhouses = 12
@@ -195,7 +195,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		numhouses = 36
 	}
 
-	julday = C.swe_julday(C.int(chartinfo.Year), C.int(chartinfo.Month), C.int(chartinfo.Day), C.double(chartinfo.Time), C.SE_GREG_CAL)
+	julday = C.swe_julday(C.int(c.Year), C.int(c.Month), C.int(c.Day), C.double(c.Time), C.SE_GREG_CAL)
 
 	C.swe_set_topo(43.13517, 5.848, 0)
 
@@ -210,7 +210,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 			degHigh := float64((sign + 1) * 30)
 			if degreeUt >= degLow && degreeUt <= degHigh {
 
-				chartinfo.AscMCs = append(chartinfo.AscMCs,
+				c.AscMCs = append(c.AscMCs,
 					AscMC{
 						XMLName:  xml.Name{Local: anames[index]},
 						ID:       index + 1,
@@ -233,7 +233,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 			degHigh := float64((sign + 1) * 30)
 			if degreeUt >= degLow && degreeUt <= degHigh {
 
-				chartinfo.Houses = append(chartinfo.Houses,
+				c.Houses = append(c.Houses,
 					House{
 						SignName: snames[sign],
 						Degree:   degreeUt - degLow,
@@ -273,7 +273,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 			degHigh := float64((sign + 1) * 30)
 			if degreeUt >= degLow && degreeUt <= degHigh {
 
-				chartinfo.Bodies = append(chartinfo.Bodies,
+				c.Bodies = append(c.Bodies,
 					Body{
 						XMLName:    xml.Name{Local: bnames[body]},
 						Sign:       sign,
@@ -289,23 +289,23 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Ascpects
-	for _, body1 := range chartinfo.Bodies {
-		deg1 := body1.DegreeUt - chartinfo.AscMCs[0].DegreeUt + 180
+	for _, body1 := range c.Bodies {
+		deg1 := body1.DegreeUt - c.AscMCs[0].DegreeUt + 180
 
-		for _, body2 := range chartinfo.Bodies {
-			deg2 := body2.DegreeUt - chartinfo.AscMCs[0].DegreeUt + 180
+		for _, body2 := range c.Bodies {
+			deg2 := body2.DegreeUt - c.AscMCs[0].DegreeUt + 180
 
-			testAspect(chartinfo, body1, body2, deg1, deg2, 180, 10, "Opposition")
-			testAspect(chartinfo, body1, body2, deg1, deg2, 150, 2, "Quincunx")
-			testAspect(chartinfo, body1, body2, deg1, deg2, 120, 8, "Trine")
-			testAspect(chartinfo, body1, body2, deg1, deg2, 90, 6, "Square")
-			testAspect(chartinfo, body1, body2, deg1, deg2, 60, 4, "Sextile")
-			testAspect(chartinfo, body1, body2, deg1, deg2, 30, 1, "Semi-sextile")
-			testAspect(chartinfo, body1, body2, deg1, deg2, 0, 10, "Conjunction")
+			testAspect(c, body1, body2, deg1, deg2, 180, 10, "Opposition")
+			testAspect(c, body1, body2, deg1, deg2, 150, 2, "Quincunx")
+			testAspect(c, body1, body2, deg1, deg2, 120, 8, "Trine")
+			testAspect(c, body1, body2, deg1, deg2, 90, 6, "Square")
+			testAspect(c, body1, body2, deg1, deg2, 60, 4, "Sextile")
+			testAspect(c, body1, body2, deg1, deg2, 30, 1, "Semi-sextile")
+			testAspect(c, body1, body2, deg1, deg2, 0, 10, "Conjunction")
 		}
 	}
 
-	out, err := xml.MarshalIndent(chartinfo, "", "  ")
+	out, err := xml.MarshalIndent(c, "", "  ")
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 	}
