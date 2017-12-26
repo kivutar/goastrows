@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"unsafe"
 )
 
@@ -50,6 +51,7 @@ type ChartInfo struct {
 	Lon     float64  `xml:"lon,attr"`
 	Name    string   `xml:"name,attr"`
 	City    string   `xml:"city,attr"`
+	Display string   `xml:"display,attr"`
 }
 
 type AscMC struct {
@@ -97,6 +99,18 @@ func contains(s []int, e int) bool {
 	return false
 }
 
+func sliceAtoi(sa []string) ([]int, error) {
+	si := make([]int, 0, len(sa))
+	for _, a := range sa {
+		i, err := strconv.Atoi(a)
+		if err != nil {
+			return si, err
+		}
+		si = append(si, i)
+	}
+	return si, nil
+}
+
 func normalize(angle float64) float64 {
 	angle = math.Mod(angle, 360)
 	if angle < 0 {
@@ -142,7 +156,10 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	c.Year = 1970
 	c.Month = 1
 	c.Day = 1
-	display := []int{0, 1, 2, 3, 4}
+	display := make([]int, C.SE_NPLANETS)
+	for i := 0; i < len(display); i++ {
+		display[i] = i
+	}
 
 	if r.URL.Query().Get("hsys") != "" {
 		hsys = int([]rune(r.URL.Query().Get("hsys"))[0])
@@ -206,6 +223,18 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		c.Lon = i
+	}
+
+	if r.URL.Query().Get("display") != "" {
+		c.Display = r.URL.Query().Get("display")
+
+		d, err := sliceAtoi(strings.Split(c.Display, ","))
+
+		if err != nil {
+			fmt.Printf("error: %v\n", err)
+		}
+
+		display = d
 	}
 
 	c.Name = r.URL.Query().Get("name")
@@ -273,7 +302,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	for body := C.int32(0); body < C.SE_NPLANETS+2; body++ {
 
 		if !contains(display[:], int(body)) {
-			break
+			continue
 		}
 
 		var degreeUt float64
