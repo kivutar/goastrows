@@ -45,6 +45,7 @@ type ChartInfo struct {
 	Year    int64    `xml:"year,attr"`
 	Month   int64    `xml:"month,attr"`
 	Day     int64    `xml:"day,attr"`
+	Time    float64  `xml:"time,attr"`
 }
 
 type AscMC struct {
@@ -173,13 +174,23 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		chartinfo.Day = i
 	}
 
+	if r.URL.Query().Get("time") != "" {
+		i, err := strconv.ParseFloat(r.URL.Query().Get("time"), 64)
+
+		if err != nil {
+			fmt.Printf("error: %v\n", err)
+		}
+
+		chartinfo.Time = i
+	}
+
 	// The number of houses is 12 except when using Gauquelin sectors
 	var numhouses = 12
 	if hsys == 'G' {
 		numhouses = 36
 	}
 
-	julday = C.swe_julday(C.int(chartinfo.Year), C.int(chartinfo.Month), C.int(chartinfo.Day), 13.25, C.SE_GREG_CAL)
+	julday = C.swe_julday(C.int(chartinfo.Year), C.int(chartinfo.Month), C.int(chartinfo.Day), C.double(chartinfo.Time), C.SE_GREG_CAL)
 
 	C.swe_set_topo(43.13517, 5.848, 0)
 
