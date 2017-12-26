@@ -46,6 +46,8 @@ type ChartInfo struct {
 	Month   int64    `xml:"month,attr"`
 	Day     int64    `xml:"day,attr"`
 	Time    float64  `xml:"time,attr"`
+	Lat     float64  `xml:"lat,attr"`
+	Lon     float64  `xml:"lon,attr"`
 	Name    string   `xml:"name,attr"`
 	City    string   `xml:"city,attr"`
 }
@@ -186,6 +188,26 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		c.Time = i
 	}
 
+	if r.URL.Query().Get("lat") != "" {
+		i, err := strconv.ParseFloat(r.URL.Query().Get("lat"), 64)
+
+		if err != nil {
+			fmt.Printf("error: %v\n", err)
+		}
+
+		c.Lat = i
+	}
+
+	if r.URL.Query().Get("lon") != "" {
+		i, err := strconv.ParseFloat(r.URL.Query().Get("lon"), 64)
+
+		if err != nil {
+			fmt.Printf("error: %v\n", err)
+		}
+
+		c.Lon = i
+	}
+
 	c.Name = r.URL.Query().Get("name")
 	c.City = r.URL.Query().Get("city")
 
@@ -197,9 +219,9 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	julday = C.swe_julday(C.int(c.Year), C.int(c.Month), C.int(c.Day), C.double(c.Time), C.SE_GREG_CAL)
 
-	C.swe_set_topo(43.13517, 5.848, 0)
+	C.swe_set_topo(C.double(c.Lat), C.double(c.Lon), 0)
 
-	C.swe_houses(julday, 43.13517, 5.848, C.int(hsys), (*C.double)(&cusp[0]), (*C.double)(&ascmc[0]))
+	C.swe_houses(julday, C.double(c.Lat), C.double(c.Lon), C.int(hsys), (*C.double)(&cusp[0]), (*C.double)(&ascmc[0]))
 
 	// AscMC
 	for index := 0; index < C.SE_NASCMC; index++ {
