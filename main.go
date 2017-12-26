@@ -46,6 +46,8 @@ type ChartInfo struct {
 	Month   int64    `xml:"month,attr"`
 	Day     int64    `xml:"day,attr"`
 	Time    float64  `xml:"time,attr"`
+	Name    string   `xml:"name,attr"`
+	City    string   `xml:"city,attr"`
 }
 
 type AscMC struct {
@@ -183,6 +185,9 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 		chartinfo.Time = i
 	}
+
+	chartinfo.Name = r.URL.Query().Get("name")
+	chartinfo.City = r.URL.Query().Get("city")
 
 	// The number of houses is 12 except when using Gauquelin sectors
 	var numhouses = 12
