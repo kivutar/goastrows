@@ -10,6 +10,9 @@ import (
 	"strconv"
 	"strings"
 	"unsafe"
+
+	gokogirixml "github.com/jbowtie/gokogiri/xml"
+	"github.com/jbowtie/ratago/xslt"
 )
 
 /*
@@ -368,9 +371,26 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(out)
 }
 
+var globalStyle, globalDoc *gokogirixml.XmlDocument
+var globalStylesheet *xslt.Stylesheet
+
+// TransformHandler performs an XSLT transformation
+func TransformHandler(w http.ResponseWriter, r *http.Request) {
+	globalStyle, _ := gokogirixml.ReadFile("wheel.xsl", gokogirixml.StrictParseOption)
+	globalStylesheet, _ := xslt.ParseStylesheet(globalStyle, "test.xsl")
+	globalDoc, _ := gokogirixml.ReadFile("test.xml", gokogirixml.StrictParseOption)
+	out, _ := globalStylesheet.Process(globalDoc, xslt.StylesheetOptions{true, nil})
+	w.Header().Set("Content-Type", "application/xml")
+	w.Write([]byte(out))
+}
+
 func main() {
 
+	fs := http.FileServer(http.Dir("."))
+	http.Handle("/", fs)
+
 	http.HandleFunc("/chartinfo", ChartInfoHandler)
+	http.HandleFunc("/transform", TransformHandler)
 
 	port := os.Getenv("PORT")
 

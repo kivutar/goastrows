@@ -2,8 +2,31 @@
 	"ImportPath": "github.com/kivutar/goastrows",
 	"GoVersion": "go1.9",
 	"GodepVersion": "v79",
-	"Packages": [
-		"./..."
-	],
-	"Deps": []
+	"Deps": [
+		{
+			"ImportPath": "github.com/jbowtie/gokogiri/help",
+			"Comment": "4.6.41-105-g40b4859",
+			"Rev": "40b48594ca1866cf5d28177629b42f8a387377de"
+		},
+		{
+			"ImportPath": "github.com/jbowtie/gokogiri/util",
+			"Comment": "4.6.41-105-g40b4859",
+			"Rev": "40b48594ca1866cf5d28177629b42f8a387377de"
+		},
+		{
+			"ImportPath": "github.com/jbowtie/gokogiri/xml",
+			"Comment": "4.6.41-105-g40b4859",
+			"Rev": "40b48594ca1866cf5d28177629b42f8a387377de"
+		},
+		{
+			"ImportPath": "github.com/jbowtie/gokogiri/xpath",
+			"Comment": "4.6.41-105-g40b4859",
+			"Rev": "40b48594ca1866cf5d28177629b42f8a387377de"
+		},
+		{
+			"ImportPath": "github.com/jbowtie/ratago/xslt",
+			"Comment": "v0.4-pre-36-gc7553af",
+			"Rev": "c7553af9b719c14677bf588854d2f5a3553b4c49"
+		}
+	]
 }
