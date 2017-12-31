@@ -12,7 +12,7 @@ import (
 	"strings"
 	"unsafe"
 
-	gokogirixml "github.com/jbowtie/gokogiri/xml"
+	gk "github.com/jbowtie/gokogiri/xml"
 	"github.com/jbowtie/ratago/xslt"
 )
 
@@ -381,23 +381,47 @@ func TransformHandler(w http.ResponseWriter, r *http.Request) {
 
 	response, err := http.Get(xmluri)
 	if err != nil {
-		fmt.Printf("%s", err)
+		fmt.Printf("error: %v\n", err)
 		return
-	} else {
-		defer response.Body.Close()
-		content, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			fmt.Printf("%s", err)
-			return
-		}
-
-		globalStyle, _ := gokogirixml.ReadFile("wheel.xsl", gokogirixml.StrictParseOption)
-		globalStylesheet, _ := xslt.ParseStylesheet(globalStyle, "test.xsl")
-		globalDoc, _ := gokogirixml.Parse(content, gokogirixml.DefaultEncodingBytes, nil, gokogirixml.DefaultParseOption, gokogirixml.DefaultEncodingBytes)
-		out, _ := globalStylesheet.Process(globalDoc, xslt.StylesheetOptions{true, nil})
-		w.Header().Set("Content-Type", "application/xml")
-		w.Write([]byte(out))
 	}
+
+	defer response.Body.Close()
+
+	xmlcontent, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+
+	xslcontent, err := gk.ReadFile("wheel.xsl", gk.StrictParseOption)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+
+	globalStylesheet, err := xslt.ParseStylesheet(xslcontent, "wheel.xsl")
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+
+	parsedXML, err := gk.Parse(xmlcontent, gk.DefaultEncodingBytes, nil, gk.DefaultParseOption, gk.DefaultEncodingBytes)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+
+	out, err := globalStylesheet.Process(parsedXML, xslt.StylesheetOptions{
+		IndentOutput: true,
+		Parameters:   nil,
+	})
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/xml")
+	w.Write([]byte(out))
 }
 
 func main() {
