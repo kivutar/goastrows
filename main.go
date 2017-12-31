@@ -379,27 +379,29 @@ func TransformHandler(w http.ResponseWriter, r *http.Request) {
 
 	xmluri := r.URL.Query().Get("xml")
 
-	response, err := http.Get(xmluri)
+	xmlresp, err := http.Get(xmluri)
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		return
 	}
 
-	defer response.Body.Close()
+	defer xmlresp.Body.Close()
 
-	xmlcontent, err := ioutil.ReadAll(response.Body)
+	xmlcontent, err := ioutil.ReadAll(xmlresp.Body)
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		return
 	}
 
-	xslcontent, err := gk.ReadFile("wheel.xsl", gk.StrictParseOption)
+	xsluri := r.URL.Query().Get("xsl")
+
+	xslcontent, err := gk.ReadFile(xsluri, gk.StrictParseOption)
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		return
 	}
 
-	globalStylesheet, err := xslt.ParseStylesheet(xslcontent, "wheel.xsl")
+	parsedXSL, err := xslt.ParseStylesheet(xslcontent, xsluri)
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		return
@@ -411,7 +413,7 @@ func TransformHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	out, err := globalStylesheet.Process(parsedXML, xslt.StylesheetOptions{
+	out, err := parsedXSL.Process(parsedXML, xslt.StylesheetOptions{
 		IndentOutput: true,
 		Parameters:   nil,
 	})
