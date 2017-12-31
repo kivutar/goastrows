@@ -84,6 +84,7 @@ type Body struct {
 	DegreeUt   float64 `xml:"degree_ut,attr"`
 	Retrograde bool    `xml:"retrograde,attr"`
 	ID         int     `xml:"id,attr"`
+	Dist       int     `xml:"dist,attr"`
 }
 
 type Aspect struct {
@@ -339,6 +340,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 						DegreeUt:   degreeUt,
 						Retrograde: retrograde,
 						ID:         int(body),
+						Dist:       0,
 					},
 				)
 			}
