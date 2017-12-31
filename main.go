@@ -8,6 +8,7 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"unsafe"
@@ -341,7 +342,6 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 						DegreeUt:   degreeUt,
 						Retrograde: retrograde,
 						ID:         int(body),
-						Dist:       0,
 					},
 				)
 			}
@@ -363,6 +363,24 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 			testAspect(c, body1, body2, deg1, deg2, 30, 1, "Semi-sextile")
 			testAspect(c, body1, body2, deg1, deg2, 0, 10, "Conjunction")
 		}
+	}
+
+	sort.Slice(c.Bodies, func(i, j int) bool {
+		return c.Bodies[i].DegreeUt < c.Bodies[j].DegreeUt
+	})
+
+	// Bodies distance
+	oldDeg := -1000.
+	dist := 0
+	for i, body := range c.Bodies {
+		deg := body.DegreeUt - c.AscMCs[0].DegreeUt + 180
+		if math.Abs(oldDeg-deg) < 5 {
+			dist++
+		} else {
+			dist = 0
+		}
+		c.Bodies[i].Dist = dist
+		oldDeg = deg
 	}
 
 	out, err := xml.MarshalIndent(c, "", "  ")
