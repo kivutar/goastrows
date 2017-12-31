@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"math"
 	"net/http"
@@ -373,17 +374,30 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(out)
 }
 
-var globalStyle, globalDoc *gokogirixml.XmlDocument
-var globalStylesheet *xslt.Stylesheet
-
 // TransformHandler performs an XSLT transformation
 func TransformHandler(w http.ResponseWriter, r *http.Request) {
-	globalStyle, _ := gokogirixml.ReadFile("wheel.xsl", gokogirixml.StrictParseOption)
-	globalStylesheet, _ := xslt.ParseStylesheet(globalStyle, "test.xsl")
-	globalDoc, _ := gokogirixml.ReadFile("test.xml", gokogirixml.StrictParseOption)
-	out, _ := globalStylesheet.Process(globalDoc, xslt.StylesheetOptions{true, nil})
-	w.Header().Set("Content-Type", "application/xml")
-	w.Write([]byte(out))
+
+	xmluri := r.URL.Query().Get("xml")
+
+	response, err := http.Get(xmluri)
+	if err != nil {
+		fmt.Printf("%s", err)
+		return
+	} else {
+		defer response.Body.Close()
+		content, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Printf("%s", err)
+			return
+		}
+
+		globalStyle, _ := gokogirixml.ReadFile("wheel.xsl", gokogirixml.StrictParseOption)
+		globalStylesheet, _ := xslt.ParseStylesheet(globalStyle, "test.xsl")
+		globalDoc, _ := gokogirixml.Parse(content, gokogirixml.DefaultEncodingBytes, nil, gokogirixml.DefaultParseOption, gokogirixml.DefaultEncodingBytes)
+		out, _ := globalStylesheet.Process(globalDoc, xslt.StylesheetOptions{true, nil})
+		w.Header().Set("Content-Type", "application/xml")
+		w.Write([]byte(out))
+	}
 }
 
 func main() {
