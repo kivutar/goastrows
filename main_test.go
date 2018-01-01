@@ -56,6 +56,28 @@ func Test_normalize(t *testing.T) {
 	}
 }
 
+func Test_contains(t *testing.T) {
+	type args struct {
+		s []int
+		e int
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{name: "Presence", args: args{s: []int{0, 1, 2, 3}, e: 2}, want: true},
+		{name: "Absence", args: args{s: []int{0, 1, 2, 3}, e: 4}, want: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := contains(tt.args.s, tt.args.e); got != tt.want {
+				t.Errorf("contains() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestChartInfoHandler(t *testing.T) {
 
 	req, err := http.NewRequest("GET", "/chartinfo", nil)
