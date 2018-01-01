@@ -184,7 +184,7 @@ func Test_makeAspect(t *testing.T) {
 			},
 		},
 		{
-			name: "Simple opposition within delta",
+			name: "Simple opposition within orb",
 			args: args{
 				body1:     Body{XMLName: xml.Name{Local: "Sun"}, DegreeUt: 0},
 				body2:     Body{XMLName: xml.Name{Local: "Moon"}, DegreeUt: 189},
@@ -202,7 +202,7 @@ func Test_makeAspect(t *testing.T) {
 			},
 		},
 		{
-			name: "Simple opposition out of delta",
+			name: "Simple opposition out of orb",
 			args: args{
 				body1:     Body{XMLName: xml.Name{Local: "Sun"}, DegreeUt: -15},
 				body2:     Body{XMLName: xml.Name{Local: "Moon"}, DegreeUt: 180},
@@ -212,6 +212,24 @@ func Test_makeAspect(t *testing.T) {
 				t:         "Opposition",
 			},
 			wantAspect: Aspect{},
+		},
+		{
+			name: "Complex square",
+			args: args{
+				body1:     Body{XMLName: xml.Name{Local: "Sun"}, DegreeUt: 75},
+				body2:     Body{XMLName: xml.Name{Local: "Moon"}, DegreeUt: 340},
+				ascendant: 0,
+				delta:     90,
+				orb:       6,
+				t:         "Square",
+			},
+			wantAspect: Aspect{
+				XMLName: xml.Name{Local: "Square"},
+				Body1:   "Sun",
+				Body2:   "Moon",
+				Degree1: 255,
+				Degree2: 160,
+			},
 		},
 	}
 	for _, tt := range tests {
