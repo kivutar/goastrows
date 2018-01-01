@@ -126,7 +126,11 @@ func normalize(angle float64) float64 {
 	return angle
 }
 
-func testAspect(ci *ChartInfo, body1 Body, body2 Body, deg1 float64, deg2 float64, delta float64, orb float64, t string) {
+func makeAspect(body1 Body, body2 Body, ascendant float64, delta float64, orb float64, t string) Aspect {
+	var a Aspect
+	deg1 := body1.DegreeUt - ascendant + 180
+	deg2 := body2.DegreeUt - ascendant + 180
+
 	if (deg1 > (deg2+delta-orb) && deg1 < (deg2+delta+orb)) ||
 		(deg1 > (deg2-delta-orb) && deg1 < (deg2-delta+orb)) ||
 		(deg1 > (deg2+360+delta-orb) && deg1 < (deg2+360+delta+orb)) ||
@@ -134,21 +138,18 @@ func testAspect(ci *ChartInfo, body1 Body, body2 Body, deg1 float64, deg2 float6
 		(deg1 > (deg2+360-delta-orb) && deg1 < (deg2+360-delta+orb)) ||
 		(deg1 > (deg2-360-delta-orb) && deg1 < (deg2-360-delta+orb)) {
 		if deg1 > deg2 {
-			aspect(ci, body1, body2, deg1, deg2, t)
+			a = Aspect{
+				XMLName: xml.Name{Local: t},
+				Body1:   body1.XMLName.Local,
+				Body2:   body2.XMLName.Local,
+				Degree1: deg1,
+				Degree2: deg2,
+			}
+			return a
 		}
 	}
-}
 
-func aspect(ci *ChartInfo, body1 Body, body2 Body, deg1 float64, deg2 float64, t string) {
-	ci.Aspects = append(ci.Aspects,
-		Aspect{
-			XMLName: xml.Name{Local: t},
-			Body1:   body1.XMLName.Local,
-			Body2:   body2.XMLName.Local,
-			Degree1: deg1,
-			Degree2: deg2,
-		},
-	)
+	return a
 }
 
 // ChartInfoHandler returns houses and planet positions for a location and time
@@ -350,18 +351,14 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Ascpects
 	for _, body1 := range c.Bodies {
-		deg1 := body1.DegreeUt - c.AscMCs[0].DegreeUt + 180
-
 		for _, body2 := range c.Bodies {
-			deg2 := body2.DegreeUt - c.AscMCs[0].DegreeUt + 180
-
-			testAspect(c, body1, body2, deg1, deg2, 180, 10, "Opposition")
-			testAspect(c, body1, body2, deg1, deg2, 150, 2, "Quincunx")
-			testAspect(c, body1, body2, deg1, deg2, 120, 8, "Trine")
-			testAspect(c, body1, body2, deg1, deg2, 90, 6, "Square")
-			testAspect(c, body1, body2, deg1, deg2, 60, 4, "Sextile")
-			testAspect(c, body1, body2, deg1, deg2, 30, 1, "Semi-sextile")
-			testAspect(c, body1, body2, deg1, deg2, 0, 10, "Conjunction")
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 180, 10, "Opposition"))
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 150, 2, "Quincunx"))
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 120, 8, "Trine"))
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 90, 6, "Square"))
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 60, 4, "Sextile"))
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 30, 1, "Semi-sextile"))
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 0, 10, "Conjunction"))
 		}
 	}
 
