@@ -289,7 +289,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	C.swe_houses(julday, C.double(c.Lat), C.double(c.Lon), C.int(hsys), (*C.double)(&cusp[0]), (*C.double)(&ascmc[0]))
 
-	// AscMC
+	// Add ascendant and other marks to the chart
 	for index := 0; index < C.SE_NASCMC; index++ {
 		degreeUt := float64(ascmc[index])
 
@@ -312,7 +312,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Houses
+	// Add house cuspids to the chart
 	for house := 1; house <= numhouses; house++ {
 		degreeUt := float64(cusp[house])
 
@@ -335,7 +335,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Bodies
+	// Add celestial bodies to the chart
 	for body := C.int32(0); body < C.SE_NPLANETS+2; body++ {
 
 		if !contains(display[:], int(body)) {
@@ -389,6 +389,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// Sort bodies on DegreeUt
 	sort.Slice(c.Bodies, func(i, j int) bool {
 		return c.Bodies[i].DegreeUt < c.Bodies[j].DegreeUt
 	})
@@ -479,7 +480,7 @@ func main() {
 	port := os.Getenv("PORT")
 
 	if port == "" {
-		fmt.Errorf("$PORT not set")
+		fmt.Println("$PORT not set")
 		port = "8080"
 	}
 
