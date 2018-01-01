@@ -6,6 +6,29 @@ import (
 	"testing"
 )
 
+func Test_normalize(t *testing.T) {
+	type args struct {
+		angle float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want float64
+	}{
+		{name: "Angle greater than 360", args: args{angle: 362}, want: 2},
+		{name: "Angle smaller than 0", args: args{angle: -2}, want: 358},
+		{name: "Angle greater than many times 360", args: args{angle: 2000}, want: 200},
+		{name: "Angle smaller than many times -360", args: args{angle: -2000}, want: 160},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := normalize(tt.args.angle); got != tt.want {
+				t.Errorf("normalize() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestChartInfoHandler(t *testing.T) {
 
 	req, err := http.NewRequest("GET", "/chartinfo", nil)
