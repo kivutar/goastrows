@@ -155,8 +155,8 @@ func normalize(angle float64) float64 {
 
 // makeAspect returns an Aspect for a given orb and two celectial bodies
 func makeAspect(body1 Body, body2 Body, ascendant float64, delta float64, orb float64, t string) (aspect Aspect) {
-	deg1 := body1.DegreeUt - ascendant + 180
-	deg2 := body2.DegreeUt - ascendant + 180
+	deg1 := normalize(body1.DegreeUt - ascendant + 180)
+	deg2 := normalize(body2.DegreeUt - ascendant + 180)
 
 	if (deg1 > (deg2+delta-orb) && deg1 < (deg2+delta+orb)) ||
 		(deg1 > (deg2-delta-orb) && deg1 < (deg2-delta+orb)) ||
