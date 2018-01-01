@@ -46,6 +46,22 @@ var snames = []string{"Aries", "Taurus", "Gemini", "Cancer", "Leo",
 	"Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius",
 	"Pisces"}
 
+type aspectsetting struct {
+	delta float64
+	orb   float64
+	title string
+}
+
+var aspectsettings = []aspectsetting{
+	{180, 10, "Opposition"},
+	{150, 2, "Quincunx"},
+	{120, 8, "Trine"},
+	{90, 6, "Square"},
+	{60, 4, "Sextile"},
+	{30, 1, "Semi-sextile"},
+	{0, 10, "Conjunction"},
+}
+
 // ChartInfo is the root node of our xml output
 type ChartInfo struct {
 	XMLName xml.Name `xml:"chartinfo"`
@@ -138,8 +154,7 @@ func normalize(angle float64) float64 {
 }
 
 // makeAspect returns an Aspect for a given orb and two celectial bodies
-func makeAspect(body1 Body, body2 Body, ascendant float64, delta float64, orb float64, t string) Aspect {
-	var a Aspect
+func makeAspect(body1 Body, body2 Body, ascendant float64, delta float64, orb float64, t string) (aspect Aspect) {
 	deg1 := body1.DegreeUt - ascendant + 180
 	deg2 := body2.DegreeUt - ascendant + 180
 
@@ -150,18 +165,18 @@ func makeAspect(body1 Body, body2 Body, ascendant float64, delta float64, orb fl
 		(deg1 > (deg2+360-delta-orb) && deg1 < (deg2+360-delta+orb)) ||
 		(deg1 > (deg2-360-delta-orb) && deg1 < (deg2-360-delta+orb)) {
 		if deg1 > deg2 {
-			a = Aspect{
+			aspect = Aspect{
 				XMLName: xml.Name{Local: t},
 				Body1:   body1.XMLName.Local,
 				Body2:   body2.XMLName.Local,
 				Degree1: deg1,
 				Degree2: deg2,
 			}
-			return a
+			return
 		}
 	}
 
-	return a
+	return
 }
 
 // ChartInfoHandler returns houses and planet positions for a location and time
@@ -365,13 +380,12 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	for _, body1 := range c.Bodies {
 		for _, body2 := range c.Bodies {
 			ascendant := c.AscMCs[0].DegreeUt
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 180, 10, "Opposition"))
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 150, 2, "Quincunx"))
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 120, 8, "Trine"))
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 90, 6, "Square"))
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 60, 4, "Sextile"))
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 30, 1, "Semi-sextile"))
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 0, 10, "Conjunction"))
+			for _, s := range aspectsettings {
+				aspect := makeAspect(body1, body2, ascendant, s.delta, s.orb, s.title)
+				if aspect != (Aspect{}) {
+					c.Aspects = append(c.Aspects, aspect)
+				}
+			}
 		}
 	}
 
