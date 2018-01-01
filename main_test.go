@@ -96,9 +96,9 @@ func Test_makeAspect(t *testing.T) {
 		{
 			name: "Simple opposition",
 			args: args{
-				body1:     Body{XMLName: xml.Name{Local: "Sun"}, DegreeUt: 180},
-				body2:     Body{XMLName: xml.Name{Local: "Moon"}, DegreeUt: 0},
-				ascendant: 180,
+				body1:     Body{XMLName: xml.Name{Local: "Sun"}, DegreeUt: 0},
+				body2:     Body{XMLName: xml.Name{Local: "Moon"}, DegreeUt: 180},
+				ascendant: 0,
 				delta:     10,
 				orb:       180,
 				t:         "Opposition",
@@ -109,6 +109,42 @@ func Test_makeAspect(t *testing.T) {
 				Body2:   "Moon",
 				Degree1: 180,
 				Degree2: 0,
+			},
+		},
+		{
+			name: "Opposition with negative angle",
+			args: args{
+				body1:     Body{XMLName: xml.Name{Local: "Sun"}, DegreeUt: 175},
+				body2:     Body{XMLName: xml.Name{Local: "Moon"}, DegreeUt: -5},
+				ascendant: 0,
+				delta:     10,
+				orb:       180,
+				t:         "Opposition",
+			},
+			wantAspect: Aspect{
+				XMLName: xml.Name{Local: "Opposition"},
+				Body1:   "Sun",
+				Body2:   "Moon",
+				Degree1: 355,
+				Degree2: 175,
+			},
+		},
+		{
+			name: "Opposition with angle greater than 360",
+			args: args{
+				body1:     Body{XMLName: xml.Name{Local: "Sun"}, DegreeUt: 365},
+				body2:     Body{XMLName: xml.Name{Local: "Moon"}, DegreeUt: 185},
+				ascendant: 0,
+				delta:     10,
+				orb:       180,
+				t:         "Opposition",
+			},
+			wantAspect: Aspect{
+				XMLName: xml.Name{Local: "Opposition"},
+				Body1:   "Sun",
+				Body2:   "Moon",
+				Degree1: 185,
+				Degree2: 5,
 			},
 		},
 	}
