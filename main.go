@@ -24,24 +24,29 @@ import (
 */
 import "C"
 
+// Celestial bodies names
 var bnames = []string{"Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter",
 	"Saturn", "Uranus", "Neptune", "Pluto", "MeanNode", "TrueNode",
 	"MeanApogee", "OscuApogee", "Earth", "Chiron", "Pholus", "Ceres", "Pallas",
 	"Juno", "Vesta", "InterpretedApogee", "InterpretedPerigee", "MeanSouthNode",
 	"TrueSouthNode"}
 
+// Houses names
 var hnames = []string{"0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII",
 	"IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX",
 	"XX", "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII",
 	"XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI"}
 
+// Names for the ascendant and other marks
 var anames = []string{"Ascendant", "MC", "ARMC", "Vertex",
 	"EquatorialAscendant", "Co-Ascendant1", "Co-Ascendant2", "PolarAscendant"}
 
+// Sign names
 var snames = []string{"Aries", "Taurus", "Gemini", "Cancer", "Leo",
 	"Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius",
 	"Pisces"}
 
+// ChartInfo is the root node of our xml output
 type ChartInfo struct {
 	XMLName xml.Name `xml:"chartinfo"`
 	Houses  []House  `xml:"houses>House"`
@@ -59,6 +64,7 @@ type ChartInfo struct {
 	Display string   `xml:"display,attr"`
 }
 
+// AscMC represents special marks like the ascendants
 type AscMC struct {
 	XMLName  xml.Name
 	ID       int     `xml:"id,attr"`
@@ -68,6 +74,7 @@ type AscMC struct {
 	DegreeUt float64 `xml:"degree_ut,attr"`
 }
 
+// House represents an astrological house cuspid
 type House struct {
 	SignName string  `xml:"sign_name,attr"`
 	Degree   float64 `xml:"degree,attr"`
@@ -77,7 +84,7 @@ type House struct {
 	DegreeUt float64 `xml:"degree_ut,attr"`
 }
 
-// Body represent a planet, a fictional planet or an asteroid
+// Body represents a planet, a fictional planet or an asteroid
 type Body struct {
 	XMLName    xml.Name
 	Sign       int     `xml:"sign,attr"`
@@ -89,6 +96,7 @@ type Body struct {
 	Dist       int     `xml:"dist,attr"`
 }
 
+// Aspect represents a astrological aspect like a Conjunction or a Sextile
 type Aspect struct {
 	XMLName xml.Name
 	Body1   string  `xml:"body1,attr"`
@@ -97,6 +105,7 @@ type Aspect struct {
 	Degree2 float64 `xml:"degree2,attr"`
 }
 
+// Checks if an int is contained in an int array
 func contains(s []int, e int) bool {
 	for _, a := range s {
 		if a == e {
@@ -106,6 +115,7 @@ func contains(s []int, e int) bool {
 	return false
 }
 
+// Converts a slice of strings to a slice of integers
 func sliceAtoi(sa []string) ([]int, error) {
 	si := make([]int, 0, len(sa))
 	for _, a := range sa {
@@ -118,6 +128,7 @@ func sliceAtoi(sa []string) ([]int, error) {
 	return si, nil
 }
 
+// Make sure angle values are in within the 0 to 360 range
 func normalize(angle float64) float64 {
 	angle = math.Mod(angle, 360)
 	if angle < 0 {
@@ -126,6 +137,7 @@ func normalize(angle float64) float64 {
 	return angle
 }
 
+// makeAspect returns an Aspect for a given orb and two celectial bodies
 func makeAspect(body1 Body, body2 Body, ascendant float64, delta float64, orb float64, t string) Aspect {
 	var a Aspect
 	deg1 := body1.DegreeUt - ascendant + 180
@@ -352,13 +364,14 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	// Ascpects
 	for _, body1 := range c.Bodies {
 		for _, body2 := range c.Bodies {
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 180, 10, "Opposition"))
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 150, 2, "Quincunx"))
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 120, 8, "Trine"))
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 90, 6, "Square"))
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 60, 4, "Sextile"))
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 30, 1, "Semi-sextile"))
-			c.Aspects = append(c.Aspects, makeAspect(body1, body2, c.AscMCs[0].DegreeUt, 0, 10, "Conjunction"))
+			ascendant := c.AscMCs[0].DegreeUt
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 180, 10, "Opposition"))
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 150, 2, "Quincunx"))
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 120, 8, "Trine"))
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 90, 6, "Square"))
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 60, 4, "Sextile"))
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 30, 1, "Semi-sextile"))
+			c.Aspects = append(c.Aspects, makeAspect(body1, body2, ascendant, 0, 10, "Conjunction"))
 		}
 	}
 
