@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/xml"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -73,6 +74,48 @@ func Test_contains(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := contains(tt.args.s, tt.args.e); got != tt.want {
 				t.Errorf("contains() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_makeAspect(t *testing.T) {
+	type args struct {
+		body1     Body
+		body2     Body
+		ascendant float64
+		delta     float64
+		orb       float64
+		t         string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		wantAspect Aspect
+	}{
+		{
+			name: "Simple opposition",
+			args: args{
+				body1:     Body{XMLName: xml.Name{Local: "Sun"}, DegreeUt: 180},
+				body2:     Body{XMLName: xml.Name{Local: "Moon"}, DegreeUt: 0},
+				ascendant: 180,
+				delta:     10,
+				orb:       180,
+				t:         "Opposition",
+			},
+			wantAspect: Aspect{
+				XMLName: xml.Name{Local: "Opposition"},
+				Body1:   "Sun",
+				Body2:   "Moon",
+				Degree1: 180,
+				Degree2: 0,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotAspect := makeAspect(tt.args.body1, tt.args.body2, tt.args.ascendant, tt.args.delta, tt.args.orb, tt.args.t); !reflect.DeepEqual(gotAspect, tt.wantAspect) {
+				t.Errorf("makeAspect() = %v, want %v", gotAspect, tt.wantAspect)
 			}
 		})
 	}
