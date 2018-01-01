@@ -3,8 +3,35 @@ package main
 import (
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 )
+
+func Test_sliceAtoi(t *testing.T) {
+	type args struct {
+		sa []string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    []int
+		wantErr bool
+	}{
+		{name: "Simple slice", args: args{sa: []string{"1", "2", "3"}}, want: []int{1, 2, 3}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := sliceAtoi(tt.args.sa)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("sliceAtoi() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("sliceAtoi() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
 func Test_normalize(t *testing.T) {
 	type args struct {
