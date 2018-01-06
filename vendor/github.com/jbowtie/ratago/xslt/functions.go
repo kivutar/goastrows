@@ -1,10 +1,15 @@
 package xslt
 
 import (
+	"bytes"
 	"fmt"
+	"math"
+	"regexp"
+	"strconv"
+	"unsafe"
+
 	"github.com/jbowtie/gokogiri/xml"
 	"github.com/jbowtie/gokogiri/xpath"
-	"unsafe"
 )
 
 func (style *Stylesheet) RegisterXsltFunctions() {
@@ -17,10 +22,14 @@ func (style *Stylesheet) RegisterXsltFunctions() {
 	style.Functions["{}current"] = XsltCurrent
 	style.Functions["{}element-available"] = XsltElementAvailable
 	style.Functions["{}function-available"] = XsltFunctionAvailable
-	//format-number - requires handling decimal-format
+	style.Functions["{}format-number"] = XsltFormatNumber
 
 	style.Functions["{http://xmlsoft.org/XSLT/namespace}node-set"] = EXSLTnodeset
 	style.Functions["{http://exslt.org/common}node-set"] = EXSLTnodeset
+	style.Functions["{http://exslt.org/math}constant"] = EXSLTmathconstant
+	style.Functions["{http://exslt.org/math}sin"] = EXSLTmathsin
+	style.Functions["{http://exslt.org/math}cos"] = EXSLTmathcos
+	style.Functions["{http://exslt.org/math}abs"] = EXSLTmathabs
 }
 
 type Key struct {
@@ -165,6 +174,52 @@ func XsltElementAvailable(context xpath.VariableScope, args []interface{}) inter
 	return false
 }
 
+// Implementation of format-number() from XSLT spec
+func XsltFormatNumber(context xpath.VariableScope, args []interface{}) interface{} {
+	if len(args) < 1 {
+		return nil
+	}
+
+	number := args[0].(float64)
+	format := args[1].(string)
+
+	if len(format) <= 0 {
+		fmt.Println("XsltFormatNumber: Invalid format (0-length)")
+	}
+
+	re := regexp.MustCompile("(?P<int>(?:#|0)*)(?P<dot>.?)(?P<dec>(?:#|0)*)")
+	names := re.SubexpNames()
+	matches := re.FindAllStringSubmatch(format, -1)[0]
+
+	parts := map[string]string{}
+	for i, n := range matches {
+		parts[names[i]] = n
+	}
+
+	var buffer bytes.Buffer
+
+	intstr := strconv.FormatInt(int64(number), 10)
+
+	if parts["int"] != "" {
+		if len(intstr) > len(parts["int"]) {
+			buffer.WriteString(intstr)
+		} else if len(intstr) < len(parts["int"]) {
+			for i := 0; i < len(parts["int"])-len(intstr); i++ {
+				buffer.WriteByte('0')
+			}
+			buffer.WriteString(intstr)
+		} else {
+			for i := range parts["int"] {
+				if i < len(intstr) {
+					buffer.WriteByte(intstr[i])
+				}
+			}
+		}
+	}
+
+	return buffer.String()
+}
+
 // util function because we can't assume we're actually getting a string
 func argValToString(val interface{}) (out string) {
 	if val == nil {
@@ -209,4 +264,60 @@ func EXSLTnodeset(context xpath.VariableScope, args []interface{}) interface{} {
 	}
 
 	return nodes
+}
+
+func EXSLTmathconstant(context xpath.VariableScope, args []interface{}) interface{} {
+
+	if len(args) != 2 {
+		return 0
+	}
+
+	name := args[0].(string)
+	precision := int(args[1].(float64))
+
+	switch name {
+	case "PI":
+		return fmt.Sprintf("%.*f", precision, 3.1415926535897932384626433832795028841971693993751)
+	case "E":
+		return fmt.Sprintf("%.*f", precision, 2.71828182845904523536028747135266249775724709369996)
+	case "SQRRT2":
+		return fmt.Sprintf("%.*f", precision, 1.41421356237309504880168872420969807856967187537694)
+	case "LN2":
+		return fmt.Sprintf("%.*f", precision, 0.69314718055994530941723212145817656807550013436025)
+	case "LN10":
+		return fmt.Sprintf("%.*f", precision, 2.30258509299404568402)
+	case "LOG2E":
+		return fmt.Sprintf("%.*f", precision, 1.4426950408889634074)
+	case "SQRT1_2":
+		return fmt.Sprintf("%.*f", precision, 0.70710678118654752440)
+	default:
+		out := fmt.Sprintf("%v", name)
+		fmt.Println("unsupported constant in math:constant", out)
+	}
+
+	return 0
+}
+
+func EXSLTmathsin(context xpath.VariableScope, args []interface{}) interface{} {
+	if len(args) != 1 {
+		return nil
+	}
+
+	return math.Sin(args[0].(float64))
+}
+
+func EXSLTmathcos(context xpath.VariableScope, args []interface{}) interface{} {
+	if len(args) != 1 {
+		return nil
+	}
+
+	return math.Cos(args[0].(float64))
+}
+
+func EXSLTmathabs(context xpath.VariableScope, args []interface{}) interface{} {
+	if len(args) != 1 {
+		return nil
+	}
+
+	return math.Abs(args[0].(float64))
 }
