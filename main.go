@@ -283,6 +283,8 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		numhouses = 36
 	}
 
+	C.swe_set_ephe_path(nil)
+
 	julday = C.swe_julday(C.int(c.Year), C.int(c.Month), C.int(c.Day), C.double(c.Time), C.SE_GREG_CAL)
 
 	C.swe_set_topo(C.double(c.Lat), C.double(c.Lon), 0)
@@ -344,7 +346,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 		var degreeUt float64
 		if body == 23 {
-			C.swe_calc_ut(julday, body, 10, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
+			C.swe_calc_ut(julday, 10, 0, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
 			degreeUt = normalize(float64(xx[0]) + 180)
 		} else if body == 24 {
 			C.swe_calc_ut(julday, 11, 0, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
