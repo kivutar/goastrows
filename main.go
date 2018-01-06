@@ -199,7 +199,9 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		display[i] = i
 	}
 
-	c.Hsys = r.URL.Query().Get("hsys")
+	if r.URL.Query().Get("hsys") != "" {
+		c.Hsys = r.URL.Query().Get("hsys")
+	}
 
 	if r.URL.Query().Get("year") != "" {
 		i, err := strconv.ParseInt(r.URL.Query().Get("year"), 10, 64)
