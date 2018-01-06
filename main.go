@@ -69,15 +69,15 @@ type ChartInfo struct {
 	Bodies  []Body   `xml:"bodies>Body"`
 	AscMCs  []AscMC  `xml:"ascmcs>AscMC"`
 	Aspects []Aspect `xml:"aspects>Aspect"`
-	Year    int64    `xml:"year,attr"`
-	Month   int64    `xml:"month,attr"`
-	Day     int64    `xml:"day,attr"`
-	Time    float64  `xml:"time,attr"`
-	Lat     float64  `xml:"lat,attr"`
-	Lon     float64  `xml:"lon,attr"`
-	Name    string   `xml:"name,attr"`
-	City    string   `xml:"city,attr"`
-	Display string   `xml:"display,attr"`
+	Year    int64    `xml:"year,attr,omitempty"`
+	Month   int64    `xml:"month,attr,omitempty"`
+	Day     int64    `xml:"day,attr,omitempty"`
+	Time    float64  `xml:"time,attr,omitempty"`
+	Lat     float64  `xml:"lat,attr,omitempty"`
+	Lon     float64  `xml:"lon,attr,omitempty"`
+	Name    string   `xml:"name,attr,omitempty"`
+	City    string   `xml:"city,attr,omitempty"`
+	Display string   `xml:"display,attr,omitempty"`
 }
 
 // AscMC represents special marks like the ascendants
@@ -472,7 +472,7 @@ func TransformHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/xml")
+	w.Header().Set("Content-Type", "image/svg+xml")
 	w.Write([]byte(out))
 }
 
