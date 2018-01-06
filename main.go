@@ -84,11 +84,11 @@ type ChartInfo struct {
 // AscMC represents special marks like the ascendants
 type AscMC struct {
 	XMLName  xml.Name
-	ID       int     `xml:"id,attr"`
-	Sign     int     `xml:"sign,attr"`
 	SignName string  `xml:"sign_name,attr"`
-	Degree   float64 `xml:"degree,attr"`
 	DegreeUt float64 `xml:"degree_ut,attr"`
+	Degree   float64 `xml:"degree,attr"`
+	Sign     int     `xml:"sign,attr"`
+	ID       int     `xml:"id,attr"`
 }
 
 // House represents an astrological house cuspid
@@ -104,13 +104,13 @@ type House struct {
 // Body represents a planet, a fictional planet or an asteroid
 type Body struct {
 	XMLName    xml.Name
-	Sign       int     `xml:"sign,attr"`
 	SignName   string  `xml:"sign_name,attr"`
-	Degree     float64 `xml:"degree,attr"`
+	Dist       int     `xml:"dist,attr"`
 	DegreeUt   float64 `xml:"degree_ut,attr"`
+	Degree     float64 `xml:"degree,attr"`
+	Sign       int     `xml:"sign,attr"`
 	Retrograde bool    `xml:"retrograde,attr"`
 	ID         int     `xml:"id,attr"`
-	Dist       int     `xml:"dist,attr"`
 }
 
 // Aspect represents a astrological aspect like a Conjunction or a Sextile
@@ -419,7 +419,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("error: %v\n", err)
 	}
 
-	w.Header().Set("Content-Type", "application/xml")
+	w.Header().Set("Content-Type", "text/xml;encoding utf-8")
 	w.Write(out)
 }
 
