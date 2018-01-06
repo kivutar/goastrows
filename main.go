@@ -65,10 +65,11 @@ var aspectsettings = []aspectsetting{
 // ChartInfo is the root node of our xml output
 type ChartInfo struct {
 	XMLName xml.Name `xml:"chartinfo"`
-	Houses  []House  `xml:"houses>House"`
-	Bodies  []Body   `xml:"bodies>Body"`
 	AscMCs  []AscMC  `xml:"ascmcs>AscMC"`
+	Houses  []House  `xml:"houses>House"`
 	Aspects []Aspect `xml:"aspects>Aspect"`
+	Bodies  []Body   `xml:"bodies>Body"`
+	Display string   `xml:"display,attr,omitempty"`
 	Year    int64    `xml:"year,attr,omitempty"`
 	Month   int64    `xml:"month,attr,omitempty"`
 	Day     int64    `xml:"day,attr,omitempty"`
@@ -77,7 +78,7 @@ type ChartInfo struct {
 	Lon     float64  `xml:"lon,attr,omitempty"`
 	Name    string   `xml:"name,attr,omitempty"`
 	City    string   `xml:"city,attr,omitempty"`
-	Display string   `xml:"display,attr,omitempty"`
+	Hsys    string   `xml:"hsys,attr,omitempty"`
 }
 
 // AscMC represents special marks like the ascendants
@@ -188,7 +189,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	var julday C.double
 	var cusp [37]C.double
 	var ascmc [10]C.double
-	var hsys int = 'E'
+	c.Hsys = "E"
 	c.Year = 1970
 	c.Month = 1
 	c.Day = 1
@@ -198,9 +199,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		display[i] = i
 	}
 
-	if r.URL.Query().Get("hsys") != "" {
-		hsys = int([]rune(r.URL.Query().Get("hsys"))[0])
-	}
+	c.Hsys = r.URL.Query().Get("hsys")
 
 	if r.URL.Query().Get("year") != "" {
 		i, err := strconv.ParseInt(r.URL.Query().Get("year"), 10, 64)
@@ -279,7 +278,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	// The number of houses is 12 except when using Gauquelin sectors
 	var numhouses = 12
-	if hsys == 'G' {
+	if c.Hsys == "G" {
 		numhouses = 36
 	}
 
@@ -289,7 +288,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	C.swe_set_topo(C.double(c.Lat), C.double(c.Lon), 0)
 
-	C.swe_houses(julday, C.double(c.Lat), C.double(c.Lon), C.int(hsys), (*C.double)(&cusp[0]), (*C.double)(&ascmc[0]))
+	C.swe_houses(julday, C.double(c.Lat), C.double(c.Lon), C.int(rune(c.Hsys[0])), (*C.double)(&cusp[0]), (*C.double)(&ascmc[0]))
 
 	// Add ascendant and other marks to the chart
 	for index := 0; index < C.SE_NASCMC; index++ {
