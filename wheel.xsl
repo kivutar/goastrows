@@ -250,7 +250,7 @@
 								<xsl:variable name = "x2" select="( math:cos($rad2) * 155) + 300" />
 								<xsl:variable name = "y2" select="(-math:sin($rad2) * 155) + 300" />
 								<path>
-									<xsl:attribute name="d"><xsl:value-of select="concat('M',$x1,',',$y1,' A 155,155 0 0 1 ',$x2,',',$y2)"/></xsl:attribute>
+									<xsl:attribute name="d"><xsl:value-of select="concat('M',( math:cos($rad1) * 155) + 300,',',(-math:sin($rad1) * 155) + 300,' A 155,155 0 0 1 ',( math:cos($rad2) * 155) + 300,',',(-math:sin($rad2) * 155) + 300)"/></xsl:attribute>
 									<xsl:attribute name="class"><xsl:value-of select="$class"/></xsl:attribute>
 									<xsl:attribute name="title"><xsl:value-of select="$title"/></xsl:attribute>
 								</path>	
@@ -261,10 +261,10 @@
 								<xsl:variable name = "x2" select="( math:cos($rad2) * 99) + 300" />
 								<xsl:variable name = "y2" select="(-math:sin($rad2) * 99) + 300" />
 								<line>
-									<xsl:attribute name="x1"><xsl:value-of select="$x1"/></xsl:attribute>
-									<xsl:attribute name="y1"><xsl:value-of select="$y1"/></xsl:attribute>
-									<xsl:attribute name="x2"><xsl:value-of select="$x2"/></xsl:attribute>
-									<xsl:attribute name="y2"><xsl:value-of select="$y2"/></xsl:attribute>
+									<xsl:attribute name="x1"><xsl:value-of select="( math:cos($rad1) * 99) + 300"/></xsl:attribute>
+									<xsl:attribute name="y1"><xsl:value-of select="(-math:sin($rad1) * 99) + 300"/></xsl:attribute>
+									<xsl:attribute name="x2"><xsl:value-of select="( math:cos($rad2) * 99) + 300"/></xsl:attribute>
+									<xsl:attribute name="y2"><xsl:value-of select="(-math:sin($rad2) * 99) + 300"/></xsl:attribute>
 									<xsl:attribute name="class"><xsl:value-of select="$class"/></xsl:attribute>
 									<xsl:attribute name="title"><xsl:value-of select="$title"/></xsl:attribute>
 								</line>

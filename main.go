@@ -421,7 +421,8 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("error: %v\n", err)
 	}
 
-	w.Header().Set("Content-Type", "text/xml;encoding utf-8")
+	w.Header().Set("Content-Type", "text/xml; charset=UTF-8")
+	out = []byte("<?xml version='1.0' encoding='UTF-8'?>" + string(out))
 	w.Write(out)
 }
 
