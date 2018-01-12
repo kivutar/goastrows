@@ -97,7 +97,7 @@ type House struct {
 	Degree   float64 `xml:"degree,attr"`
 	Number   string  `xml:"number,attr"`
 	Sign     int     `xml:"sign,attr"`
-	House    int     `xml:"house,attr"`
+	ID       int     `xml:"id,attr"`
 	DegreeUt float64 `xml:"degree_ut,attr"`
 }
 
@@ -330,7 +330,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 						Degree:   degreeUt - degLow,
 						Number:   hnames[house],
 						Sign:     sign,
-						House:    house,
+						ID:       house,
 						DegreeUt: degreeUt,
 					},
 				)
