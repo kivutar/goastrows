@@ -14,7 +14,7 @@ import (
 	"unsafe"
 
 	gk "github.com/jbowtie/gokogiri/xml"
-	"github.com/jbowtie/ratago/xslt"
+	"github.com/kivutar/ratago/xslt"
 )
 
 /*

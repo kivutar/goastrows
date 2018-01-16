@@ -174,52 +174,6 @@ func XsltElementAvailable(context xpath.VariableScope, args []interface{}) inter
 	return false
 }
 
-// Implementation of format-number() from XSLT spec
-func XsltFormatNumber(context xpath.VariableScope, args []interface{}) interface{} {
-	if len(args) < 1 {
-		return nil
-	}
-
-	number := args[0].(float64)
-	format := args[1].(string)
-
-	if len(format) <= 0 {
-		fmt.Println("XsltFormatNumber: Invalid format (0-length)")
-	}
-
-	re := regexp.MustCompile("(?P<int>(?:#|0)*)(?P<dot>.?)(?P<dec>(?:#|0)*)")
-	names := re.SubexpNames()
-	matches := re.FindAllStringSubmatch(format, -1)[0]
-
-	parts := map[string]string{}
-	for i, n := range matches {
-		parts[names[i]] = n
-	}
-
-	var buffer bytes.Buffer
-
-	intstr := strconv.FormatInt(int64(number), 10)
-
-	if parts["int"] != "" {
-		if len(intstr) > len(parts["int"]) {
-			buffer.WriteString(intstr)
-		} else if len(intstr) < len(parts["int"]) {
-			for i := 0; i < len(parts["int"])-len(intstr); i++ {
-				buffer.WriteByte('0')
-			}
-			buffer.WriteString(intstr)
-		} else {
-			for i := range parts["int"] {
-				if i < len(intstr) {
-					buffer.WriteByte(intstr[i])
-				}
-			}
-		}
-	}
-
-	return buffer.String()
-}
-
 // util function because we can't assume we're actually getting a string
 func argValToString(val interface{}) (out string) {
 	if val == nil {
@@ -320,4 +274,49 @@ func EXSLTmathabs(context xpath.VariableScope, args []interface{}) interface{} {
 	}
 
 	return math.Abs(args[0].(float64))
+}
+
+func XsltFormatNumber(context xpath.VariableScope, args []interface{}) interface{} {
+	if len(args) < 1 {
+		return nil
+	}
+
+	number := args[0].(float64)
+	format := args[1].(string)
+
+	if len(format) <= 0 {
+		fmt.Println("XsltFormatNumber: Invalid format (0-length)")
+	}
+
+	re := regexp.MustCompile("(?P<int>(?:#|0)*)(?P<dot>.?)(?P<dec>(?:#|0)*)")
+	names := re.SubexpNames()
+	matches := re.FindAllStringSubmatch(format, -1)[0]
+
+	parts := map[string]string{}
+	for i, n := range matches {
+		parts[names[i]] = n
+	}
+
+	var buffer bytes.Buffer
+
+	intstr := strconv.FormatInt(int64(number), 10)
+
+	if parts["int"] != "" {
+		if len(intstr) > len(parts["int"]) {
+			buffer.WriteString(intstr)
+		} else if len(intstr) < len(parts["int"]) {
+			for i := 0; i < len(parts["int"])-len(intstr); i++ {
+				buffer.WriteByte('0')
+			}
+			buffer.WriteString(intstr)
+		} else {
+			for i := range parts["int"] {
+				if i < len(intstr) {
+					buffer.WriteByte(intstr[i])
+				}
+			}
+		}
+	}
+
+	return buffer.String()
 }

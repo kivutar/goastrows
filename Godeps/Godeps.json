@@ -24,9 +24,9 @@
 			"Rev": "40b48594ca1866cf5d28177629b42f8a387377de"
 		},
 		{
-			"ImportPath": "github.com/jbowtie/ratago/xslt",
-			"Comment": "v0.4-pre-44-gb822d24",
-			"Rev": "b822d24117a22969e01c777d0b934952d0d80696"
+			"ImportPath": "github.com/kivutar/ratago/xslt",
+			"Comment": "v0.4-pre-41-g8699fcf",
+			"Rev": "8699fcf7c668ef37fa2bcd7a07121f714cb2498a"
 		}
 	]
 }
