@@ -483,8 +483,8 @@ func main() {
 	fs := http.FileServer(http.Dir("."))
 	http.Handle("/", fs)
 
-	http.HandleFunc("/chartinfo", ChartInfoHandler)
-	http.HandleFunc("/transform", TransformHandler)
+	http.HandleFunc("/chartinfo.py", ChartInfoHandler)
+	http.HandleFunc("/transform.py", TransformHandler)
 
 	port := os.Getenv("PORT")
 
