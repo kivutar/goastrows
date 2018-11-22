@@ -484,7 +484,9 @@ func main() {
 	http.Handle("/", fs)
 
 	http.HandleFunc("/chartinfo.py", ChartInfoHandler)
+	http.HandleFunc("/chartinfo", ChartInfoHandler)
 	http.HandleFunc("/transform.py", TransformHandler)
+	http.HandleFunc("/transform", TransformHandler)
 
 	port := os.Getenv("PORT")
 
