@@ -2,3 +2,4 @@
 *.o
 swe/libswe.a
 swe/swetest
+goastrows
