@@ -242,7 +242,7 @@ func Test_makeAspect(t *testing.T) {
 }
 
 func TestChartInfoHandler(t *testing.T) {
-	req, err := http.NewRequest("GET", "/chartinfo.py?name,&city,(null)&country,(null)&lat,0.000000&lon,0.000000&year,2019&month,2&day,18&time,16.083334&hsys,E&display,0,1,2,3,4,5,6,7,8,9,10,12,23&tz,Asia/Saigon", nil)
+	req, err := http.NewRequest("GET", "/chartinfo.py?name=&city=(null)&country=(null)&lat=0.000000&lon=0.000000&year=2019&month=2&day=18&time=16.083334&hsys=E&display,0,1,2,3,4,5,6,7,8,9,10,12,23&tz=Asia/Saigon", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -252,148 +252,147 @@ func TestChartInfoHandler(t *testing.T) {
 
 	handler.ServeHTTP(rr, req)
 
-	want := `<?xml version='1.0' encoding='UTF-8'?><chartinfo display="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23" year="1970" month="1" day="1" hsys="E">
+	want := `<?xml version='1.0' encoding='UTF-8'?><chartinfo display="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23" year="2019" month="2" day="18" time="16.083334" city="(null)" hsys="E">
   <ascmcs>
-    <Ascendant sign_name="Libra" degree_ut="191.12942456262076" degree="11.129424562620756" sign="6" id="1"></Ascendant>
-    <MC sign_name="Cancer" degree_ut="99.40188603109995" degree="9.401886031099949" sign="3" id="2"></MC>
-    <ARMC sign_name="Cancer" degree_ut="100.23081494650327" degree="10.230814946503273" sign="3" id="3"></ARMC>
+    <Ascendant sign_name="Cancer" degree_ut="117.50872494334897" degree="27.508724943348966" sign="3" id="1"></Ascendant>
+    <MC sign_name="Taurus" degree_ut="31.741532888977215" degree="1.7415328889772148" sign="1" id="2"></MC>
+    <ARMC sign_name="Aries" degree_ut="29.57849084041179" degree="29.57849084041179" sign="0" id="3"></ARMC>
     <Vertex sign_name="Aries" degree_ut="0" degree="0" sign="0" id="4"></Vertex>
-    <EquatorialAscendant sign_name="Libra" degree_ut="191.12942456262076" degree="11.129424562620756" sign="6" id="5"></EquatorialAscendant>
-    <Co-Ascendant1 sign_name="Libra" degree_ut="191.12942456262076" degree="11.129424562620756" sign="6" id="6"></Co-Ascendant1>
+    <EquatorialAscendant sign_name="Cancer" degree_ut="117.50872494334894" degree="27.508724943348938" sign="3" id="5"></EquatorialAscendant>
+    <Co-Ascendant1 sign_name="Cancer" degree_ut="117.50872494334897" degree="27.508724943348966" sign="3" id="6"></Co-Ascendant1>
     <Co-Ascendant2 sign_name="Virgo" degree_ut="180" degree="30" sign="5" id="7"></Co-Ascendant2>
     <Co-Ascendant2 sign_name="Libra" degree_ut="180" degree="0" sign="6" id="7"></Co-Ascendant2>
-    <PolarAscendant sign_name="Aries" degree_ut="11.129424562620759" degree="11.129424562620759" sign="0" id="8"></PolarAscendant>
+    <PolarAscendant sign_name="Capricorn" degree_ut="297.50872494334897" degree="27.508724943348966" sign="9" id="8"></PolarAscendant>
   </ascmcs>
   <houses>
-    <House sign_name="Libra" degree="11.129424562620756" number="I" sign="6" id="1" degree_ut="191.12942456262076"></House>
-    <House sign_name="Scorpio" degree="11.129424562620756" number="II" sign="7" id="2" degree_ut="221.12942456262076"></House>
-    <House sign_name="Sagittarius" degree="11.129424562620756" number="III" sign="8" id="3" degree_ut="251.12942456262076"></House>
-    <House sign_name="Capricorn" degree="11.129424562620784" number="IV" sign="9" id="4" degree_ut="281.1294245626208"></House>
-    <House sign_name="Aquarius" degree="11.129424562620784" number="V" sign="10" id="5" degree_ut="311.1294245626208"></House>
-    <House sign_name="Pisces" degree="11.129424562620784" number="VI" sign="11" id="6" degree_ut="341.1294245626208"></House>
-    <House sign_name="Aries" degree="11.129424562620784" number="VII" sign="0" id="7" degree_ut="11.129424562620784"></House>
-    <House sign_name="Taurus" degree="11.129424562620784" number="VIII" sign="1" id="8" degree_ut="41.129424562620784"></House>
-    <House sign_name="Gemini" degree="11.129424562620784" number="IX" sign="2" id="9" degree_ut="71.12942456262078"></House>
-    <House sign_name="Cancer" degree="11.129424562620784" number="X" sign="3" id="10" degree_ut="101.12942456262078"></House>
-    <House sign_name="Leo" degree="11.129424562620784" number="XI" sign="4" id="11" degree_ut="131.12942456262078"></House>
-    <House sign_name="Virgo" degree="11.129424562620784" number="XII" sign="5" id="12" degree_ut="161.12942456262078"></House>
+    <House sign_name="Cancer" degree="27.508724943348966" number="I" sign="3" id="1" degree_ut="117.50872494334897"></House>
+    <House sign_name="Leo" degree="27.508724943348966" number="II" sign="4" id="2" degree_ut="147.50872494334897"></House>
+    <House sign_name="Virgo" degree="27.508724943348966" number="III" sign="5" id="3" degree_ut="177.50872494334897"></House>
+    <House sign_name="Libra" degree="27.508724943348966" number="IV" sign="6" id="4" degree_ut="207.50872494334897"></House>
+    <House sign_name="Scorpio" degree="27.508724943348966" number="V" sign="7" id="5" degree_ut="237.50872494334897"></House>
+    <House sign_name="Sagittarius" degree="27.508724943348966" number="VI" sign="8" id="6" degree_ut="267.50872494334897"></House>
+    <House sign_name="Capricorn" degree="27.508724943348966" number="VII" sign="9" id="7" degree_ut="297.50872494334897"></House>
+    <House sign_name="Aquarius" degree="27.508724943348966" number="VIII" sign="10" id="8" degree_ut="327.50872494334897"></House>
+    <House sign_name="Pisces" degree="27.508724943348966" number="IX" sign="11" id="9" degree_ut="357.50872494334897"></House>
+    <House sign_name="Aries" degree="27.508724943348966" number="X" sign="0" id="10" degree_ut="27.508724943348966"></House>
+    <House sign_name="Taurus" degree="27.508724943348966" number="XI" sign="1" id="11" degree_ut="57.508724943348966"></House>
+    <House sign_name="Gemini" degree="27.508724943348966" number="XII" sign="2" id="12" degree_ut="87.50872494334897"></House>
   </houses>
   <aspects>
-    <Square body1="Sun" body2="Moon" degree1="269.0268594396571" degree2="179.5696251252196"></Square>
-    <Conjunction body1="Sun" body2="Venus" degree1="269.0268594396571" degree2="263.3238424164573"></Conjunction>
-    <Square body1="Sun" body2="Uranus" degree1="269.0268594396571" degree2="177.59120413790973"></Square>
-    <Quincunx body1="Sun" body2="OscuApogee" degree1="269.0268594396571" degree2="120.97145833629688"></Quincunx>
-    <Conjunction body1="Moon" body2="Uranus" degree1="179.5696251252196" degree2="177.59120413790973"></Conjunction>
-    <Sextile body1="Moon" body2="OscuApogee" degree1="179.5696251252196" degree2="120.97145833629688"></Sextile>
-    <Sextile body1="Moon" body2="InterpretedApogee" degree1="179.5696251252196" degree2="116.09777594684972"></Sextile>
-    <Square body1="Mercury" body2="Jupiter" degree1="287.8920436548366" degree2="201.19559555304576"></Square>
-    <Square body1="Mercury" body2="Saturn" degree1="287.8920436548366" degree2="20.9328864223898"></Square>
-    <Sextile body1="Mercury" body2="Neptune" degree1="287.8920436548366" degree2="228.7564433086492"></Sextile>
-    <Trine body1="Mercury" body2="Pluto" degree1="287.8920436548366" degree2="166.26273992846998"></Trine>
-    <Opposition body1="Mercury" body2="MeanApogee" degree1="287.8920436548366" degree2="111.63538553494561"></Opposition>
-    <Conjunction body1="Mercury" body2="Pallas" degree1="287.8920436548366" degree2="286.9402433480859"></Conjunction>
-    <Opposition body1="Mercury" body2="InterpretedApogee" degree1="287.8920436548366" degree2="116.09777594684972"></Opposition>
-    <Conjunction body1="Mercury" body2="InterpretedPerigee" degree1="287.8920436548366" degree2="280.37635039643567"></Conjunction>
-    <Sextile body1="Venus" body2="Jupiter" degree1="263.3238424164573" degree2="201.19559555304576"></Sextile>
-    <Trine body1="Venus" body2="Saturn" degree1="263.3238424164573" degree2="20.9328864223898"></Trine>
-    <Square body1="Venus" body2="Uranus" degree1="263.3238424164573" degree2="177.59120413790973"></Square>
-    <Quincunx body1="Venus" body2="MeanApogee" degree1="263.3238424164573" degree2="111.63538553494561"></Quincunx>
-    <Sextile body1="Mars" body2="Sun" degree1="331.106825503049" degree2="269.0268594396571"></Sextile>
-    <Quincunx body1="Mars" body2="Moon" degree1="331.106825503049" degree2="179.5696251252196"></Quincunx>
-    <Quincunx body1="Mars" body2="OscuApogee" degree1="331.106825503049" degree2="120.97145833629688"></Quincunx>
-    <Opposition body1="Jupiter" body2="Saturn" degree1="201.19559555304576" degree2="20.9328864223898"></Opposition>
-    <Square body1="Jupiter" body2="MeanApogee" degree1="201.19559555304576" degree2="111.63538553494561"></Square>
-    <Square body1="Jupiter" body2="InterpretedApogee" degree1="201.19559555304576" degree2="116.09777594684972"></Square>
-    <Sextile body1="Uranus" body2="OscuApogee" degree1="177.59120413790973" degree2="120.97145833629688"></Sextile>
-    <Sextile body1="Uranus" body2="InterpretedApogee" degree1="177.59120413790973" degree2="116.09777594684972"></Sextile>
-    <Sextile body1="Neptune" body2="Pluto" degree1="228.7564433086492" degree2="166.26273992846998"></Sextile>
-    <Trine body1="Neptune" body2="MeanApogee" degree1="228.7564433086492" degree2="111.63538553494561"></Trine>
-    <Square body1="Neptune" body2="Vesta" degree1="228.7564433086492" degree2="134.99098809324295"></Square>
-    <Trine body1="Neptune" body2="InterpretedApogee" degree1="228.7564433086492" degree2="116.09777594684972"></Trine>
-    <Conjunction body1="MeanNode" body2="Mars" degree1="334.15744153189837" degree2="331.106825503049"></Conjunction>
-    <Conjunction body1="MeanNode" body2="TrueNode" degree1="334.15744153189837" degree2="332.9305252185683"></Conjunction>
-    <Sextile body1="TrueNode" body2="Sun" degree1="332.9305252185683" degree2="269.0268594396571"></Sextile>
-    <Conjunction body1="TrueNode" body2="Mars" degree1="332.9305252185683" degree2="331.106825503049"></Conjunction>
-    <Quincunx body1="TrueNode" body2="OscuApogee" degree1="332.9305252185683" degree2="120.97145833629688"></Quincunx>
-    <Square body1="MeanApogee" body2="Saturn" degree1="111.63538553494561" degree2="20.9328864223898"></Square>
-    <Conjunction body1="OscuApogee" body2="MeanApogee" degree1="120.97145833629688" degree2="111.63538553494561"></Conjunction>
-    <Conjunction body1="OscuApogee" body2="InterpretedApogee" degree1="120.97145833629688" degree2="116.09777594684972"></Conjunction>
-    <Sextile body1="Earth" body2="Mercury" degree1="348.8705754373792" degree2="287.8920436548366"></Sextile>
-    <Square body1="Earth" body2="Venus" degree1="348.8705754373792" degree2="263.3238424164573"></Square>
-    <Opposition body1="Earth" body2="Uranus" degree1="348.8705754373792" degree2="177.59120413790973"></Opposition>
-    <Trine body1="Earth" body2="Neptune" degree1="348.8705754373792" degree2="228.7564433086492"></Trine>
-    <Opposition body1="Earth" body2="Pluto" degree1="348.8705754373792" degree2="166.26273992846998"></Opposition>
-    <Trine body1="Earth" body2="MeanApogee" degree1="348.8705754373792" degree2="111.63538553494561"></Trine>
-    <Sextile body1="Earth" body2="Pallas" degree1="348.8705754373792" degree2="286.9402433480859"></Sextile>
-    <Trine body1="Earth" body2="InterpretedApogee" degree1="348.8705754373792" degree2="116.09777594684972"></Trine>
-    <Opposition body1="Chiron" body2="Moon" degree1="351.3909796929443" degree2="179.5696251252196"></Opposition>
-    <Sextile body1="Chiron" body2="Mercury" degree1="351.3909796929443" degree2="287.8920436548366"></Sextile>
-    <Square body1="Chiron" body2="Venus" degree1="351.3909796929443" degree2="263.3238424164573"></Square>
-    <Quincunx body1="Chiron" body2="Jupiter" degree1="351.3909796929443" degree2="201.19559555304576"></Quincunx>
-    <Semi-sextile body1="Chiron" body2="Saturn" degree1="351.3909796929443" degree2="20.9328864223898"></Semi-sextile>
-    <Opposition body1="Chiron" body2="Uranus" degree1="351.3909796929443" degree2="177.59120413790973"></Opposition>
-    <Trine body1="Chiron" body2="Neptune" degree1="351.3909796929443" degree2="228.7564433086492"></Trine>
-    <Opposition body1="Chiron" body2="Pluto" degree1="351.3909796929443" degree2="166.26273992846998"></Opposition>
-    <Trine body1="Chiron" body2="MeanApogee" degree1="351.3909796929443" degree2="111.63538553494561"></Trine>
-    <Conjunction body1="Chiron" body2="Earth" degree1="351.3909796929443" degree2="348.8705754373792"></Conjunction>
-    <Sextile body1="Chiron" body2="Juno" degree1="351.3909796929443" degree2="293.5476873633056"></Sextile>
-    <Trine body1="Chiron" body2="InterpretedApogee" degree1="351.3909796929443" degree2="116.09777594684972"></Trine>
-    <Trine body1="Pholus" body2="Jupiter" degree1="314.9121756198093" degree2="201.19559555304576"></Trine>
-    <Square body1="Pholus" body2="Neptune" degree1="314.9121756198093" degree2="228.7564433086492"></Square>
-    <Quincunx body1="Pholus" body2="Pluto" degree1="314.9121756198093" degree2="166.26273992846998"></Quincunx>
-    <Conjunction body1="Pholus" body2="Ceres" degree1="314.9121756198093" degree2="309.99002380150625"></Conjunction>
-    <Opposition body1="Pholus" body2="Vesta" degree1="314.9121756198093" degree2="134.99098809324295"></Opposition>
-    <Opposition body1="Ceres" body2="OscuApogee" degree1="309.99002380150625" degree2="120.97145833629688"></Opposition>
-    <Opposition body1="Ceres" body2="Vesta" degree1="309.99002380150625" degree2="134.99098809324295"></Opposition>
-    <Semi-sextile body1="Ceres" body2="InterpretedPerigee" degree1="309.99002380150625" degree2="280.37635039643567"></Semi-sextile>
-    <Square body1="Pallas" body2="Jupiter" degree1="286.9402433480859" degree2="201.19559555304576"></Square>
-    <Square body1="Pallas" body2="Saturn" degree1="286.9402433480859" degree2="20.9328864223898"></Square>
-    <Sextile body1="Pallas" body2="Neptune" degree1="286.9402433480859" degree2="228.7564433086492"></Sextile>
-    <Trine body1="Pallas" body2="Pluto" degree1="286.9402433480859" degree2="166.26273992846998"></Trine>
-    <Opposition body1="Pallas" body2="MeanApogee" degree1="286.9402433480859" degree2="111.63538553494561"></Opposition>
-    <Quincunx body1="Pallas" body2="Vesta" degree1="286.9402433480859" degree2="134.99098809324295"></Quincunx>
-    <Opposition body1="Pallas" body2="InterpretedApogee" degree1="286.9402433480859" degree2="116.09777594684972"></Opposition>
-    <Conjunction body1="Pallas" body2="InterpretedPerigee" degree1="286.9402433480859" degree2="280.37635039643567"></Conjunction>
-    <Trine body1="Juno" body2="Moon" degree1="293.5476873633056" degree2="179.5696251252196"></Trine>
-    <Conjunction body1="Juno" body2="Mercury" degree1="293.5476873633056" degree2="287.8920436548366"></Conjunction>
-    <Semi-sextile body1="Juno" body2="Venus" degree1="293.5476873633056" degree2="263.3238424164573"></Semi-sextile>
-    <Square body1="Juno" body2="Jupiter" degree1="293.5476873633056" degree2="201.19559555304576"></Square>
-    <Square body1="Juno" body2="Saturn" degree1="293.5476873633056" degree2="20.9328864223898"></Square>
-    <Trine body1="Juno" body2="Uranus" degree1="293.5476873633056" degree2="177.59120413790973"></Trine>
-    <Trine body1="Juno" body2="Pluto" degree1="293.5476873633056" degree2="166.26273992846998"></Trine>
-    <Opposition body1="Juno" body2="MeanApogee" degree1="293.5476873633056" degree2="111.63538553494561"></Opposition>
-    <Opposition body1="Juno" body2="OscuApogee" degree1="293.5476873633056" degree2="120.97145833629688"></Opposition>
-    <Conjunction body1="Juno" body2="Pallas" degree1="293.5476873633056" degree2="286.9402433480859"></Conjunction>
-    <Opposition body1="Juno" body2="InterpretedApogee" degree1="293.5476873633056" degree2="116.09777594684972"></Opposition>
-    <Trine body1="Vesta" body2="Saturn" degree1="134.99098809324295" degree2="20.9328864223898"></Trine>
-    <Square body1="InterpretedApogee" body2="Saturn" degree1="116.09777594684972" degree2="20.9328864223898"></Square>
-    <Conjunction body1="InterpretedApogee" body2="MeanApogee" degree1="116.09777594684972" degree2="111.63538553494561"></Conjunction>
-    <Trine body1="InterpretedPerigee" body2="Pluto" degree1="280.37635039643567" degree2="166.26273992846998"></Trine>
+    <Conjunction body1="Sun" body2="MeanApogee" degree1="32.19789409202457" degree2="24.253872912601196"></Conjunction>
+    <Conjunction body1="Sun" body2="OscuApogee" degree1="32.19789409202457" degree2="30.155917318864"></Conjunction>
+    <Conjunction body1="Sun" body2="InterpretedApogee" degree1="32.19789409202457" degree2="22.776064798135508"></Conjunction>
+    <Quincunx body1="Moon" body2="Mercury" degree1="198.05918019893016" degree2="47.05335285723277"></Quincunx>
+    <Quincunx body1="Moon" body2="Neptune" degree1="198.05918019893016" degree2="48.037820595324035"></Quincunx>
+    <Opposition body1="Moon" body2="MeanApogee" degree1="198.05918019893016" degree2="24.253872912601196"></Opposition>
+    <Opposition body1="Moon" body2="InterpretedApogee" degree1="198.05918019893016" degree2="22.776064798135508"></Opposition>
+    <Conjunction body1="Mercury" body2="Vesta" degree1="47.05335285723277" degree2="41.029149088999645"></Conjunction>
+    <Quincunx body1="Venus" body2="Moon" degree1="349.51497520957923" degree2="198.05918019893016"></Quincunx>
+    <Sextile body1="Venus" body2="Mercury" degree1="349.51497520957923" degree2="47.05335285723277"></Sextile>
+    <Conjunction body1="Venus" body2="Saturn" degree1="349.51497520957923" degree2="349.28198299152405"></Conjunction>
+    <Sextile body1="Venus" body2="Neptune" degree1="349.51497520957923" degree2="48.037820595324035"></Sextile>
+    <Opposition body1="Venus" body2="MeanNode" degree1="349.51497520957923" degree2="177.48197354436465"></Opposition>
+    <Opposition body1="Venus" body2="TrueNode" degree1="349.51497520957923" degree2="178.96236317353817"></Opposition>
+    <Sextile body1="Mars" body2="Sun" degree1="95.34012060660856" degree2="32.19789409202457"></Sextile>
+    <Conjunction body1="Mars" body2="Uranus" degree1="95.34012060660856" degree2="91.86644519578465"></Conjunction>
+    <Trine body1="Jupiter" body2="Moon" degree1="323.03629424557374" degree2="198.05918019893016"></Trine>
+    <Square body1="Jupiter" body2="Mercury" degree1="323.03629424557374" degree2="47.05335285723277"></Square>
+    <Square body1="Jupiter" body2="Neptune" degree1="323.03629424557374" degree2="48.037820595324035"></Square>
+    <Sextile body1="Jupiter" body2="MeanApogee" degree1="323.03629424557374" degree2="24.253872912601196"></Sextile>
+    <Sextile body1="Jupiter" body2="InterpretedApogee" degree1="323.03629424557374" degree2="22.776064798135508"></Sextile>
+    <Trine body1="Jupiter" body2="InterpretedPerigee" degree1="323.03629424557374" degree2="208.44234428598787"></Trine>
+    <Quincunx body1="Saturn" body2="Moon" degree1="349.28198299152405" degree2="198.05918019893016"></Quincunx>
+    <Sextile body1="Saturn" body2="Mercury" degree1="349.28198299152405" degree2="47.05335285723277"></Sextile>
+    <Sextile body1="Saturn" body2="Neptune" degree1="349.28198299152405" degree2="48.037820595324035"></Sextile>
+    <Opposition body1="Saturn" body2="MeanNode" degree1="349.28198299152405" degree2="177.48197354436465"></Opposition>
+    <Opposition body1="Saturn" body2="TrueNode" degree1="349.28198299152405" degree2="178.96236317353817"></Opposition>
+    <Sextile body1="Uranus" body2="Sun" degree1="91.86644519578465" degree2="32.19789409202457"></Sextile>
+    <Sextile body1="Uranus" body2="OscuApogee" degree1="91.86644519578465" degree2="30.155917318864"></Sextile>
+    <Semi-sextile body1="Uranus" body2="Earth" degree1="91.86644519578465" degree2="62.491275056651034"></Semi-sextile>
+    <Semi-sextile body1="Uranus" body2="Chiron" degree1="91.86644519578465" degree2="62.50655412902415"></Semi-sextile>
+    <Conjunction body1="Neptune" body2="Mercury" degree1="48.037820595324035" degree2="47.05335285723277"></Conjunction>
+    <Conjunction body1="Neptune" body2="Vesta" degree1="48.037820595324035" degree2="41.029149088999645"></Conjunction>
+    <Conjunction body1="Pluto" body2="Venus" degree1="354.65623396399155" degree2="349.51497520957923"></Conjunction>
+    <Conjunction body1="Pluto" body2="Saturn" degree1="354.65623396399155" degree2="349.28198299152405"></Conjunction>
+    <Opposition body1="Pluto" body2="MeanNode" degree1="354.65623396399155" degree2="177.48197354436465"></Opposition>
+    <Opposition body1="Pluto" body2="TrueNode" degree1="354.65623396399155" degree2="178.96236317353817"></Opposition>
+    <Semi-sextile body1="Pluto" body2="MeanApogee" degree1="354.65623396399155" degree2="24.253872912601196"></Semi-sextile>
+    <Square body1="MeanNode" body2="Uranus" degree1="177.48197354436465" degree2="91.86644519578465"></Square>
+    <Trine body1="MeanNode" body2="Earth" degree1="177.48197354436465" degree2="62.491275056651034"></Trine>
+    <Trine body1="MeanNode" body2="Chiron" degree1="177.48197354436465" degree2="62.50655412902415"></Trine>
+    <Square body1="TrueNode" body2="Uranus" degree1="178.96236317353817" degree2="91.86644519578465"></Square>
+    <Conjunction body1="TrueNode" body2="MeanNode" degree1="178.96236317353817" degree2="177.48197354436465"></Conjunction>
+    <Quincunx body1="TrueNode" body2="OscuApogee" degree1="178.96236317353817" degree2="30.155917318864"></Quincunx>
+    <Trine body1="TrueNode" body2="Earth" degree1="178.96236317353817" degree2="62.491275056651034"></Trine>
+    <Trine body1="TrueNode" body2="Chiron" degree1="178.96236317353817" degree2="62.50655412902415"></Trine>
+    <Conjunction body1="MeanApogee" body2="InterpretedApogee" degree1="24.253872912601196" degree2="22.776064798135508"></Conjunction>
+    <Conjunction body1="OscuApogee" body2="MeanApogee" degree1="30.155917318864" degree2="24.253872912601196"></Conjunction>
+    <Conjunction body1="OscuApogee" body2="InterpretedApogee" degree1="30.155917318864" degree2="22.776064798135508"></Conjunction>
+    <Semi-sextile body1="Earth" body2="Sun" degree1="62.491275056651034" degree2="32.19789409202457"></Semi-sextile>
+    <Semi-sextile body1="Chiron" body2="Sun" degree1="62.50655412902415" degree2="32.19789409202457"></Semi-sextile>
+    <Conjunction body1="Chiron" body2="Earth" degree1="62.50655412902415" degree2="62.491275056651034"></Conjunction>
+    <Sextile body1="Pholus" body2="Sun" degree1="334.93606064706603" degree2="32.19789409202457"></Sextile>
+    <Trine body1="Pholus" body2="Mars" degree1="334.93606064706603" degree2="95.34012060660856"></Trine>
+    <Trine body1="Pholus" body2="Uranus" degree1="334.93606064706603" degree2="91.86644519578465"></Trine>
+    <Square body1="Pholus" body2="Earth" degree1="334.93606064706603" degree2="62.491275056651034"></Square>
+    <Square body1="Pholus" body2="Chiron" degree1="334.93606064706603" degree2="62.50655412902415"></Square>
+    <Sextile body1="Pholus" body2="Pallas" degree1="334.93606064706603" degree2="271.9800016978568"></Sextile>
+    <Quincunx body1="Pholus" body2="Juno" degree1="334.93606064706603" degree2="125.22217151509598"></Quincunx>
+    <Trine body1="Pholus" body2="InterpretedPerigee" degree1="334.93606064706603" degree2="208.44234428598787"></Trine>
+    <Trine body1="Ceres" body2="Earth" degree1="309.6874361812895" degree2="62.491275056651034"></Trine>
+    <Trine body1="Ceres" body2="Chiron" degree1="309.6874361812895" degree2="62.50655412902415"></Trine>
+    <Opposition body1="Ceres" body2="Juno" degree1="309.6874361812895" degree2="125.22217151509598"></Opposition>
+    <Square body1="Ceres" body2="Vesta" degree1="309.6874361812895" degree2="41.029149088999645"></Square>
+    <Trine body1="Pallas" body2="Sun" degree1="271.9800016978568" degree2="32.19789409202457"></Trine>
+    <Opposition body1="Pallas" body2="Mars" degree1="271.9800016978568" degree2="95.34012060660856"></Opposition>
+    <Opposition body1="Pallas" body2="Uranus" degree1="271.9800016978568" degree2="91.86644519578465"></Opposition>
+    <Square body1="Pallas" body2="MeanNode" degree1="271.9800016978568" degree2="177.48197354436465"></Square>
+    <Square body1="Pallas" body2="TrueNode" degree1="271.9800016978568" degree2="178.96236317353817"></Square>
+    <Trine body1="Pallas" body2="MeanApogee" degree1="271.9800016978568" degree2="24.253872912601196"></Trine>
+    <Trine body1="Pallas" body2="OscuApogee" degree1="271.9800016978568" degree2="30.155917318864"></Trine>
+    <Quincunx body1="Pallas" body2="Earth" degree1="271.9800016978568" degree2="62.491275056651034"></Quincunx>
+    <Quincunx body1="Pallas" body2="Chiron" degree1="271.9800016978568" degree2="62.50655412902415"></Quincunx>
+    <Sextile body1="Pallas" body2="InterpretedPerigee" degree1="271.9800016978568" degree2="208.44234428598787"></Sextile>
+    <Square body1="Juno" body2="Sun" degree1="125.22217151509598" degree2="32.19789409202457"></Square>
+    <Semi-sextile body1="Juno" body2="Mars" degree1="125.22217151509598" degree2="95.34012060660856"></Semi-sextile>
+    <Square body1="Juno" body2="OscuApogee" degree1="125.22217151509598" degree2="30.155917318864"></Square>
+    <Sextile body1="Juno" body2="Earth" degree1="125.22217151509598" degree2="62.491275056651034"></Sextile>
+    <Sextile body1="Juno" body2="Chiron" degree1="125.22217151509598" degree2="62.50655412902415"></Sextile>
+    <Square body1="Juno" body2="Vesta" degree1="125.22217151509598" degree2="41.029149088999645"></Square>
+    <Conjunction body1="Vesta" body2="Sun" degree1="41.029149088999645" degree2="32.19789409202457"></Conjunction>
+    <Opposition body1="InterpretedPerigee" body2="Sun" degree1="208.44234428598787" degree2="32.19789409202457"></Opposition>
+    <Trine body1="InterpretedPerigee" body2="Mars" degree1="208.44234428598787" degree2="95.34012060660856"></Trine>
+    <Trine body1="InterpretedPerigee" body2="Uranus" degree1="208.44234428598787" degree2="91.86644519578465"></Trine>
+    <Semi-sextile body1="InterpretedPerigee" body2="MeanNode" degree1="208.44234428598787" degree2="177.48197354436465"></Semi-sextile>
+    <Semi-sextile body1="InterpretedPerigee" body2="TrueNode" degree1="208.44234428598787" degree2="178.96236317353817"></Semi-sextile>
+    <Opposition body1="InterpretedPerigee" body2="MeanApogee" degree1="208.44234428598787" degree2="24.253872912601196"></Opposition>
+    <Opposition body1="InterpretedPerigee" body2="OscuApogee" degree1="208.44234428598787" degree2="30.155917318864"></Opposition>
+    <Opposition body1="InterpretedPerigee" body2="InterpretedApogee" degree1="208.44234428598787" degree2="22.776064798135508"></Opposition>
   </aspects>
   <bodies>
     <Earth sign_name="Aries" dist="0" degree_ut="0" degree="0" sign="0" retrograde="false" id="14"></Earth>
-    <Chiron sign_name="Aries" dist="1" degree_ut="2.5204042555650723" degree="2.5204042555650723" sign="0" retrograde="false" id="15"></Chiron>
-    <Saturn sign_name="Taurus" dist="0" degree_ut="32.06231098501057" degree="2.062310985010569" sign="1" retrograde="false" id="6"></Saturn>
-    <MeanApogee sign_name="Leo" dist="0" degree_ut="122.76481009756637" degree="2.764810097566368" sign="4" retrograde="false" id="12"></MeanApogee>
-    <InterpretedApogee sign_name="Leo" dist="1" degree_ut="127.22720050947048" degree="7.227200509470478" sign="4" retrograde="false" id="21"></InterpretedApogee>
-    <OscuApogee sign_name="Leo" dist="2" degree_ut="132.10088289891763" degree="12.100882898917632" sign="4" retrograde="false" id="13"></OscuApogee>
-    <Vesta sign_name="Leo" dist="0" degree_ut="146.1204126558637" degree="26.120412655863703" sign="4" retrograde="false" id="20"></Vesta>
-    <Pluto sign_name="Virgo" dist="0" degree_ut="177.39216449109074" degree="27.39216449109074" sign="5" retrograde="false" id="9"></Pluto>
-    <Uranus sign_name="Libra" dist="0" degree_ut="188.72062870053048" degree="8.720628700530483" sign="6" retrograde="false" id="7"></Uranus>
-    <Moon sign_name="Libra" dist="1" degree_ut="190.69904968784036" degree="10.699049687840358" sign="6" retrograde="false" id="1"></Moon>
-    <Jupiter sign_name="Scorpio" dist="0" degree_ut="212.32502011566652" degree="2.3250201156665184" sign="7" retrograde="false" id="5"></Jupiter>
-    <Neptune sign_name="Scorpio" dist="0" degree_ut="239.88586787126997" degree="29.885867871269966" sign="7" retrograde="false" id="8"></Neptune>
-    <Venus sign_name="Capricorn" dist="0" degree_ut="274.4532669790781" degree="4.45326697907808" sign="9" retrograde="false" id="3"></Venus>
-    <Sun sign_name="Capricorn" dist="0" degree_ut="280.1562840022778" degree="10.1562840022778" sign="9" retrograde="false" id="0"></Sun>
-    <InterpretedPerigee sign_name="Capricorn" dist="0" degree_ut="291.50577495905645" degree="21.505774959056453" sign="9" retrograde="false" id="22"></InterpretedPerigee>
-    <Pallas sign_name="Capricorn" dist="0" degree_ut="298.0696679107067" degree="28.0696679107067" sign="9" retrograde="false" id="18"></Pallas>
-    <Mercury sign_name="Capricorn" dist="1" degree_ut="299.02146821745737" degree="29.021468217457368" sign="9" retrograde="false" id="2"></Mercury>
-    <Juno sign_name="Aquarius" dist="0" degree_ut="304.67711192592634" degree="4.67711192592634" sign="10" retrograde="false" id="19"></Juno>
-    <Ceres sign_name="Aquarius" dist="0" degree_ut="321.11944836412704" degree="21.119448364127038" sign="10" retrograde="false" id="17"></Ceres>
-    <Pholus sign_name="Aquarius" dist="1" degree_ut="326.0416001824301" degree="26.041600182430102" sign="10" retrograde="false" id="16"></Pholus>
-    <Mars sign_name="Pisces" dist="0" degree_ut="342.23625006566976" degree="12.236250065669765" sign="11" retrograde="false" id="4"></Mars>
-    <TrueNode sign_name="Pisces" dist="1" degree_ut="344.05994978118906" degree="14.059949781189061" sign="11" retrograde="false" id="11"></TrueNode>
-    <MeanNode sign_name="Pisces" dist="2" degree_ut="345.28686609451916" degree="15.286866094519155" sign="11" retrograde="false" id="10"></MeanNode>
+    <Chiron sign_name="Aries" dist="1" degree_ut="0.015279072373118385" degree="0.015279072373118385" sign="0" retrograde="false" id="15"></Chiron>
+    <Uranus sign_name="Aries" dist="0" degree_ut="29.375170139133623" degree="29.375170139133623" sign="0" retrograde="false" id="7"></Uranus>
+    <Mars sign_name="Taurus" dist="1" degree_ut="32.848845549957524" degree="2.848845549957524" sign="1" retrograde="false" id="4"></Mars>
+    <Juno sign_name="Gemini" dist="0" degree_ut="62.730896458444946" degree="2.7308964584449456" sign="2" retrograde="false" id="19"></Juno>
+    <MeanNode sign_name="Cancer" dist="0" degree_ut="114.99069848771362" degree="24.990698487713615" sign="3" retrograde="false" id="10"></MeanNode>
+    <TrueNode sign_name="Cancer" dist="1" degree_ut="116.47108811688712" degree="26.471088116887117" sign="3" retrograde="false" id="11"></TrueNode>
+    <Moon sign_name="Leo" dist="0" degree_ut="135.56790514227913" degree="15.56790514227913" sign="4" retrograde="false" id="1"></Moon>
+    <InterpretedPerigee sign_name="Leo" dist="0" degree_ut="145.95106922933684" degree="25.951069229336838" sign="4" retrograde="false" id="22"></InterpretedPerigee>
+    <Pallas sign_name="Libra" dist="0" degree_ut="209.48872664120572" degree="29.488726641205716" sign="6" retrograde="false" id="18"></Pallas>
+    <Ceres sign_name="Sagittarius" dist="0" degree_ut="247.1961611246385" degree="7.1961611246385075" sign="8" retrograde="false" id="17"></Ceres>
+    <Jupiter sign_name="Sagittarius" dist="0" degree_ut="260.5450191889227" degree="20.54501918892271" sign="8" retrograde="false" id="5"></Jupiter>
+    <Pholus sign_name="Capricorn" dist="0" degree_ut="272.444785590415" degree="2.4447855904149947" sign="9" retrograde="false" id="16"></Pholus>
+    <Saturn sign_name="Capricorn" dist="0" degree_ut="286.790707934873" degree="16.790707934873012" sign="9" retrograde="false" id="6"></Saturn>
+    <Venus sign_name="Capricorn" dist="1" degree_ut="287.0237001529282" degree="17.0237001529282" sign="9" retrograde="false" id="3"></Venus>
+    <Pluto sign_name="Capricorn" dist="0" degree_ut="292.1649589073405" degree="22.16495890734052" sign="9" retrograde="false" id="9"></Pluto>
+    <InterpretedApogee sign_name="Aquarius" dist="0" degree_ut="320.2847897414845" degree="20.284789741484474" sign="10" retrograde="false" id="21"></InterpretedApogee>
+    <MeanApogee sign_name="Aquarius" dist="1" degree_ut="321.76259785595016" degree="21.762597855950162" sign="10" retrograde="false" id="12"></MeanApogee>
+    <OscuApogee sign_name="Aquarius" dist="0" degree_ut="327.66464226221296" degree="27.664642262212965" sign="10" retrograde="false" id="13"></OscuApogee>
+    <Sun sign_name="Aquarius" dist="1" degree_ut="329.70661903537354" degree="29.706619035373535" sign="10" retrograde="false" id="0"></Sun>
+    <Vesta sign_name="Pisces" dist="0" degree_ut="338.5378740323486" degree="8.537874032348611" sign="11" retrograde="false" id="20"></Vesta>
+    <Mercury sign_name="Pisces" dist="0" degree_ut="344.56207780058173" degree="14.562077800581733" sign="11" retrograde="false" id="2"></Mercury>
+    <Neptune sign_name="Pisces" dist="1" degree_ut="345.546545538673" degree="15.546545538673001" sign="11" retrograde="false" id="8"></Neptune>
   </bodies>
 </chartinfo>`
 
