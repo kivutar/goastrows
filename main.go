@@ -424,6 +424,8 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/xml; charset=UTF-8")
 	out = []byte("<?xml version='1.0' encoding='UTF-8'?>" + string(out))
 	w.Write(out)
+
+	C.swe_close()
 }
 
 // TransformHandler performs an XSLT transformation

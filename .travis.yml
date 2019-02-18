@@ -13,6 +13,9 @@ env:
 before_install:
   - make -C swe
 
+before_script:
+  - go get honnef.co/go/tools/cmd/staticcheck
+
 script:
   - go test -v -race
   - go vet ./...
