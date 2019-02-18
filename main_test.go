@@ -282,26 +282,26 @@ func TestChartInfoHandler(t *testing.T) {
     <Conjunction body1="Sun" body2="MeanApogee" degree1="32.19789409202457" degree2="24.253872912601196"></Conjunction>
     <Conjunction body1="Sun" body2="OscuApogee" degree1="32.19789409202457" degree2="30.155917318864"></Conjunction>
     <Conjunction body1="Sun" body2="InterpretedApogee" degree1="32.19789409202457" degree2="22.776064798135508"></Conjunction>
-    <Quincunx body1="Moon" body2="Mercury" degree1="198.05918019893016" degree2="47.05335285723277"></Quincunx>
-    <Quincunx body1="Moon" body2="Neptune" degree1="198.05918019893016" degree2="48.037820595324035"></Quincunx>
-    <Opposition body1="Moon" body2="MeanApogee" degree1="198.05918019893016" degree2="24.253872912601196"></Opposition>
-    <Opposition body1="Moon" body2="InterpretedApogee" degree1="198.05918019893016" degree2="22.776064798135508"></Opposition>
+    <Quincunx body1="Moon" body2="Mercury" degree1="198.05918019893105" degree2="47.05335285723277"></Quincunx>
+    <Quincunx body1="Moon" body2="Neptune" degree1="198.05918019893105" degree2="48.037820595324035"></Quincunx>
+    <Opposition body1="Moon" body2="MeanApogee" degree1="198.05918019893105" degree2="24.253872912601196"></Opposition>
+    <Opposition body1="Moon" body2="InterpretedApogee" degree1="198.05918019893105" degree2="22.776064798135508"></Opposition>
     <Conjunction body1="Mercury" body2="Vesta" degree1="47.05335285723277" degree2="41.029149088999645"></Conjunction>
-    <Quincunx body1="Venus" body2="Moon" degree1="349.51497520957923" degree2="198.05918019893016"></Quincunx>
+    <Quincunx body1="Venus" body2="Moon" degree1="349.51497520957923" degree2="198.05918019893105"></Quincunx>
     <Sextile body1="Venus" body2="Mercury" degree1="349.51497520957923" degree2="47.05335285723277"></Sextile>
     <Conjunction body1="Venus" body2="Saturn" degree1="349.51497520957923" degree2="349.28198299152405"></Conjunction>
     <Sextile body1="Venus" body2="Neptune" degree1="349.51497520957923" degree2="48.037820595324035"></Sextile>
     <Opposition body1="Venus" body2="MeanNode" degree1="349.51497520957923" degree2="177.48197354436465"></Opposition>
     <Opposition body1="Venus" body2="TrueNode" degree1="349.51497520957923" degree2="178.96236317353817"></Opposition>
-    <Sextile body1="Mars" body2="Sun" degree1="95.34012060660856" degree2="32.19789409202457"></Sextile>
-    <Conjunction body1="Mars" body2="Uranus" degree1="95.34012060660856" degree2="91.86644519578465"></Conjunction>
-    <Trine body1="Jupiter" body2="Moon" degree1="323.03629424557374" degree2="198.05918019893016"></Trine>
+    <Sextile body1="Mars" body2="Sun" degree1="95.34012060660855" degree2="32.19789409202457"></Sextile>
+    <Conjunction body1="Mars" body2="Uranus" degree1="95.34012060660855" degree2="91.86644519578465"></Conjunction>
+    <Trine body1="Jupiter" body2="Moon" degree1="323.03629424557374" degree2="198.05918019893105"></Trine>
     <Square body1="Jupiter" body2="Mercury" degree1="323.03629424557374" degree2="47.05335285723277"></Square>
     <Square body1="Jupiter" body2="Neptune" degree1="323.03629424557374" degree2="48.037820595324035"></Square>
     <Sextile body1="Jupiter" body2="MeanApogee" degree1="323.03629424557374" degree2="24.253872912601196"></Sextile>
     <Sextile body1="Jupiter" body2="InterpretedApogee" degree1="323.03629424557374" degree2="22.776064798135508"></Sextile>
     <Trine body1="Jupiter" body2="InterpretedPerigee" degree1="323.03629424557374" degree2="208.44234428598787"></Trine>
-    <Quincunx body1="Saturn" body2="Moon" degree1="349.28198299152405" degree2="198.05918019893016"></Quincunx>
+    <Quincunx body1="Saturn" body2="Moon" degree1="349.28198299152405" degree2="198.05918019893105"></Quincunx>
     <Sextile body1="Saturn" body2="Mercury" degree1="349.28198299152405" degree2="47.05335285723277"></Sextile>
     <Sextile body1="Saturn" body2="Neptune" degree1="349.28198299152405" degree2="48.037820595324035"></Sextile>
     <Opposition body1="Saturn" body2="MeanNode" degree1="349.28198299152405" degree2="177.48197354436465"></Opposition>
@@ -332,7 +332,7 @@ func TestChartInfoHandler(t *testing.T) {
     <Semi-sextile body1="Chiron" body2="Sun" degree1="62.50655412902415" degree2="32.19789409202457"></Semi-sextile>
     <Conjunction body1="Chiron" body2="Earth" degree1="62.50655412902415" degree2="62.491275056651034"></Conjunction>
     <Sextile body1="Pholus" body2="Sun" degree1="334.93606064706603" degree2="32.19789409202457"></Sextile>
-    <Trine body1="Pholus" body2="Mars" degree1="334.93606064706603" degree2="95.34012060660856"></Trine>
+    <Trine body1="Pholus" body2="Mars" degree1="334.93606064706603" degree2="95.34012060660855"></Trine>
     <Trine body1="Pholus" body2="Uranus" degree1="334.93606064706603" degree2="91.86644519578465"></Trine>
     <Square body1="Pholus" body2="Earth" degree1="334.93606064706603" degree2="62.491275056651034"></Square>
     <Square body1="Pholus" body2="Chiron" degree1="334.93606064706603" degree2="62.50655412902415"></Square>
@@ -344,7 +344,7 @@ func TestChartInfoHandler(t *testing.T) {
     <Opposition body1="Ceres" body2="Juno" degree1="309.6874361812895" degree2="125.22217151509598"></Opposition>
     <Square body1="Ceres" body2="Vesta" degree1="309.6874361812895" degree2="41.029149088999645"></Square>
     <Trine body1="Pallas" body2="Sun" degree1="271.9800016978568" degree2="32.19789409202457"></Trine>
-    <Opposition body1="Pallas" body2="Mars" degree1="271.9800016978568" degree2="95.34012060660856"></Opposition>
+    <Opposition body1="Pallas" body2="Mars" degree1="271.9800016978568" degree2="95.34012060660855"></Opposition>
     <Opposition body1="Pallas" body2="Uranus" degree1="271.9800016978568" degree2="91.86644519578465"></Opposition>
     <Square body1="Pallas" body2="MeanNode" degree1="271.9800016978568" degree2="177.48197354436465"></Square>
     <Square body1="Pallas" body2="TrueNode" degree1="271.9800016978568" degree2="178.96236317353817"></Square>
@@ -354,14 +354,14 @@ func TestChartInfoHandler(t *testing.T) {
     <Quincunx body1="Pallas" body2="Chiron" degree1="271.9800016978568" degree2="62.50655412902415"></Quincunx>
     <Sextile body1="Pallas" body2="InterpretedPerigee" degree1="271.9800016978568" degree2="208.44234428598787"></Sextile>
     <Square body1="Juno" body2="Sun" degree1="125.22217151509598" degree2="32.19789409202457"></Square>
-    <Semi-sextile body1="Juno" body2="Mars" degree1="125.22217151509598" degree2="95.34012060660856"></Semi-sextile>
+    <Semi-sextile body1="Juno" body2="Mars" degree1="125.22217151509598" degree2="95.34012060660855"></Semi-sextile>
     <Square body1="Juno" body2="OscuApogee" degree1="125.22217151509598" degree2="30.155917318864"></Square>
     <Sextile body1="Juno" body2="Earth" degree1="125.22217151509598" degree2="62.491275056651034"></Sextile>
     <Sextile body1="Juno" body2="Chiron" degree1="125.22217151509598" degree2="62.50655412902415"></Sextile>
     <Square body1="Juno" body2="Vesta" degree1="125.22217151509598" degree2="41.029149088999645"></Square>
     <Conjunction body1="Vesta" body2="Sun" degree1="41.029149088999645" degree2="32.19789409202457"></Conjunction>
     <Opposition body1="InterpretedPerigee" body2="Sun" degree1="208.44234428598787" degree2="32.19789409202457"></Opposition>
-    <Trine body1="InterpretedPerigee" body2="Mars" degree1="208.44234428598787" degree2="95.34012060660856"></Trine>
+    <Trine body1="InterpretedPerigee" body2="Mars" degree1="208.44234428598787" degree2="95.34012060660855"></Trine>
     <Trine body1="InterpretedPerigee" body2="Uranus" degree1="208.44234428598787" degree2="91.86644519578465"></Trine>
     <Semi-sextile body1="InterpretedPerigee" body2="MeanNode" degree1="208.44234428598787" degree2="177.48197354436465"></Semi-sextile>
     <Semi-sextile body1="InterpretedPerigee" body2="TrueNode" degree1="208.44234428598787" degree2="178.96236317353817"></Semi-sextile>
@@ -371,13 +371,13 @@ func TestChartInfoHandler(t *testing.T) {
   </aspects>
   <bodies>
     <Earth sign_name="Aries" dist="0" degree_ut="0" degree="0" sign="0" retrograde="false" id="14"></Earth>
-    <Chiron sign_name="Aries" dist="1" degree_ut="0.015279072373118385" degree="0.015279072373118385" sign="0" retrograde="false" id="15"></Chiron>
+    <Chiron sign_name="Aries" dist="1" degree_ut="0.015279072373118058" degree="0.015279072373118058" sign="0" retrograde="false" id="15"></Chiron>
     <Uranus sign_name="Aries" dist="0" degree_ut="29.375170139133623" degree="29.375170139133623" sign="0" retrograde="false" id="7"></Uranus>
-    <Mars sign_name="Taurus" dist="1" degree_ut="32.848845549957524" degree="2.848845549957524" sign="1" retrograde="false" id="4"></Mars>
+    <Mars sign_name="Taurus" dist="1" degree_ut="32.84884554995752" degree="2.8488455499575167" sign="1" retrograde="false" id="4"></Mars>
     <Juno sign_name="Gemini" dist="0" degree_ut="62.730896458444946" degree="2.7308964584449456" sign="2" retrograde="false" id="19"></Juno>
     <MeanNode sign_name="Cancer" dist="0" degree_ut="114.99069848771362" degree="24.990698487713615" sign="3" retrograde="false" id="10"></MeanNode>
     <TrueNode sign_name="Cancer" dist="1" degree_ut="116.47108811688712" degree="26.471088116887117" sign="3" retrograde="false" id="11"></TrueNode>
-    <Moon sign_name="Leo" dist="0" degree_ut="135.56790514227913" degree="15.56790514227913" sign="4" retrograde="false" id="1"></Moon>
+    <Moon sign_name="Leo" dist="0" degree_ut="135.56790514228" degree="15.567905142280011" sign="4" retrograde="false" id="1"></Moon>
     <InterpretedPerigee sign_name="Leo" dist="0" degree_ut="145.95106922933684" degree="25.951069229336838" sign="4" retrograde="false" id="22"></InterpretedPerigee>
     <Pallas sign_name="Libra" dist="0" degree_ut="209.48872664120572" degree="29.488726641205716" sign="6" retrograde="false" id="18"></Pallas>
     <Ceres sign_name="Sagittarius" dist="0" degree_ut="247.1961611246385" degree="7.1961611246385075" sign="8" retrograde="false" id="17"></Ceres>
