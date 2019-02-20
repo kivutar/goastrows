@@ -284,8 +284,6 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		numhouses = 36
 	}
 
-	C.swe_set_ephe_path(C.CString("swe"))
-
 	julday = C.swe_julday(C.int(c.Year), C.int(c.Month), C.int(c.Day), C.double(c.Time), C.SE_GREG_CAL)
 
 	C.swe_set_topo(C.double(c.Lat), C.double(c.Lon), 0)
@@ -424,8 +422,6 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/xml; charset=UTF-8")
 	out = []byte("<?xml version='1.0' encoding='UTF-8'?>" + string(out))
 	w.Write(out)
-
-	C.swe_close()
 }
 
 // TransformHandler performs an XSLT transformation
@@ -481,6 +477,8 @@ func TransformHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	C.swe_set_ephe_path(C.CString("swe"))
+	defer C.swe_close()
 
 	fs := http.FileServer(http.Dir("."))
 	http.Handle("/", fs)
