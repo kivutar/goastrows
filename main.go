@@ -450,6 +450,7 @@ func TransformHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("error: %v\n", err)
 		return
 	}
+	defer xslcontent.Free()
 
 	parsedXSL, err := xslt.ParseStylesheet(xslcontent, xsluri)
 	if err != nil {
@@ -462,6 +463,7 @@ func TransformHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("error: %v\n", err)
 		return
 	}
+	defer parsedXML.Free()
 
 	out, err := parsedXSL.Process(parsedXML, xslt.StylesheetOptions{
 		IndentOutput: true,
