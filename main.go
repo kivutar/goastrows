@@ -476,9 +476,17 @@ func TransformHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(out))
 }
 
+func sweSetEphePath(path string) {
+	C.swe_set_ephe_path(C.CString(path))
+}
+
+func sweClose() {
+	C.swe_close()
+}
+
 func main() {
-	C.swe_set_ephe_path(C.CString("swe"))
-	defer C.swe_close()
+	sweSetEphePath("swe")
+	defer sweClose()
 
 	fs := http.FileServer(http.Dir("."))
 	http.Handle("/", fs)
