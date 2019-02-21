@@ -427,38 +427,37 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 // TransformHandler performs an XSLT transformation
 func TransformHandler(w http.ResponseWriter, r *http.Request) {
 
-	xmluri := r.URL.Query().Get("xml")
+	XMLURI := r.URL.Query().Get("xml")
 
-	xmlresp, err := http.Get(xmluri)
+	XMLResponse, err := http.Get(XMLURI)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+	defer XMLResponse.Body.Close()
+
+	XMLContent, err := ioutil.ReadAll(XMLResponse.Body)
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		return
 	}
 
-	defer xmlresp.Body.Close()
+	XSLURI := r.URL.Query().Get("xsl")
 
-	xmlcontent, err := ioutil.ReadAll(xmlresp.Body)
+	XSLContent, err := gk.ReadFile(XSLURI, gk.StrictParseOption)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+	defer XSLContent.Free()
+
+	parsedXSL, err := xslt.ParseStylesheet(XSLContent, XSLURI)
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		return
 	}
 
-	xsluri := r.URL.Query().Get("xsl")
-
-	xslcontent, err := gk.ReadFile(xsluri, gk.StrictParseOption)
-	if err != nil {
-		fmt.Printf("error: %v\n", err)
-		return
-	}
-	defer xslcontent.Free()
-
-	parsedXSL, err := xslt.ParseStylesheet(xslcontent, xsluri)
-	if err != nil {
-		fmt.Printf("error: %v\n", err)
-		return
-	}
-
-	parsedXML, err := gk.Parse(xmlcontent, gk.DefaultEncodingBytes, nil, gk.DefaultParseOption, gk.DefaultEncodingBytes)
+	parsedXML, err := gk.Parse(XMLContent, gk.DefaultEncodingBytes, nil, gk.DefaultParseOption, gk.DefaultEncodingBytes)
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		return
