@@ -357,7 +357,7 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if ret < 0 {
-			fmt.Println(string(serr))
+			log.Fatal(string(serr))
 		}
 
 		retrograde := xx[3] < 0
@@ -478,7 +478,9 @@ func TransformHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func sweSetEphePath(path string) {
-	C.swe_set_ephe_path(C.CString(path))
+	cpath := C.CString(path)
+	defer C.free(unsafe.Pointer(cpath))
+	C.swe_set_ephe_path(cpath)
 }
 
 func sweClose() {
