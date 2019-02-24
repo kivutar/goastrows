@@ -11,6 +11,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"unsafe"
 
 	gk "github.com/jbowtie/gokogiri/xml"
@@ -121,6 +122,8 @@ type Aspect struct {
 	Degree1 float64 `xml:"degree1,attr"`
 	Degree2 float64 `xml:"degree2,attr"`
 }
+
+var mu sync.Mutex
 
 // Checks if an int is contained in an int array
 func contains(s []int, e int) bool {
@@ -346,13 +349,19 @@ func ChartInfoHandler(w http.ResponseWriter, r *http.Request) {
 		var degreeUt float64
 		var ret C.int32
 		if body == 23 {
+			mu.Lock()
 			ret = C.swe_calc_ut(julday, 10, 0, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
+			mu.Unlock()
 			degreeUt = normalize(float64(xx[0]) + 180)
 		} else if body == 24 {
+			mu.Lock()
 			ret = C.swe_calc_ut(julday, 11, 0, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
+			mu.Unlock()
 			degreeUt = normalize(float64(xx[0]) + 180)
 		} else {
+			mu.Lock()
 			ret = C.swe_calc_ut(julday, body, 0, &xx[0], (*C.char)(unsafe.Pointer(&serr[0])))
+			mu.Unlock()
 			degreeUt = float64(xx[0])
 		}
 
