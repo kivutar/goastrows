@@ -415,16 +415,15 @@ func TestConcurrentChartInfoHandler(t *testing.T) {
 	wg.Add(200)
 	for i := 0; i < 200; i++ {
 		go func() {
+			defer wg.Done()
 			req, err := http.NewRequest("GET", "/chartinfo.py?name=&city=(null)&country=(null)&lat=0.000000&lon=0.000000&year=2019&month=2&day=18&time=16.083334&hsys=E&display,0,1,2,3,4,5,6,7,8,9,10,12,23&tz=Asia/Saigon", nil)
 			if err != nil {
-				t.Fatal(err)
+				return
 			}
 
 			rr := httptest.NewRecorder()
 			handler := http.HandlerFunc(ChartInfoHandler)
 			handler.ServeHTTP(rr, req)
-
-			wg.Done()
 		}()
 	}
 	wg.Wait()
