@@ -424,12 +424,6 @@ func TestConcurrentChartInfoHandler(t *testing.T) {
 			handler := http.HandlerFunc(ChartInfoHandler)
 			handler.ServeHTTP(rr, req)
 
-			want := 200
-			got := rr.Code
-			if got != want {
-				t.Errorf("handler returned wrong xml: got %v want %v",
-					got, want)
-			}
 			wg.Done()
 		}()
 	}
