@@ -1,3 +1,4 @@
+// +heroku goVersion go1.11
 module github.com/kivutar/goastrows
 
 require (
@@ -5,4 +6,4 @@ require (
 	github.com/kivutar/ratago v0.0.0-20180116150209-8699fcf7c668
 )
 
-go 1.13
+go 1.11
