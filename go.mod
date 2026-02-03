@@ -7,3 +7,5 @@ require (
 )
 
 go 1.12
+
+replace github.com/jbowtie/gokogiri => ./vendor/github.com/jbowtie/gokogiri

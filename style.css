@@ -93,7 +93,7 @@
 }
 
 #aspects>line.Trine,
-#aspects>line.Sextile, 
+#aspects>line.Sextile,
 #aspects>line.Semi-sextile {
 	stroke:blue;
 }
@@ -143,63 +143,63 @@ defs g *,
 }
 
 /* Nodes and Lilith */
-defs g#OscuApogee *, 
-defs g#MeanApogee *, 
-defs g#TrueNode *, 
+defs g#OscuApogee *,
+defs g#MeanApogee,
+defs g#TrueNode *,
 defs g#MeanNode *,
-defs g#TrueSouthNode *, 
+defs g#TrueSouthNode *,
 defs g#MeanSouthNode *,
-#bodies use.OscuApogee *, 
-#bodies use.MeanApogee *, 
-#bodies use.TrueNode *, 
+#bodies use.OscuApogee *,
+#bodies use.MeanApogee *,
+#bodies use.TrueNode *,
 #bodies use.MeanNode *,
-#bodies use.TrueSouthNode *, 
+#bodies use.TrueSouthNode *,
 #bodies use.MeanSouthNode *,
-#bodies line.OscuApogee, 
-#bodies line.MeanApogee, 
-#bodies line.TrueNode, 
+#bodies line.OscuApogee,
+#bodies line.MeanApogee,
+#bodies line.TrueNode,
 #bodies line.MeanNode,
-#bodies line.TrueSouthNode, 
+#bodies line.TrueSouthNode,
 #bodies line.MeanSouthNode {
 	stroke:black;
 }
 
-#bodies text.OscuApogee, 
-#bodies text.MeanApogee, 
-#bodies text.TrueNode, 
+#bodies text.OscuApogee,
+#bodies text.MeanApogee,
+#bodies text.TrueNode,
 #bodies text.MeanNode,
-#bodies text.TrueSouthNode, 
+#bodies text.TrueSouthNode,
 #bodies text.MeanSouthNode {
 	fill:black;
 }
 
 /* Asteroids */
-defs g#Chiron *, 
-defs g#Pholus *, 
+defs g#Chiron *,
+defs g#Pholus *,
 defs g#Ceres *,
 defs g#Pallas *,
 defs g#Juno *,
 defs g#Vesta *,
-#bodies use.Chiron *, 
-#bodies use.Pholus *, 
+#bodies use.Chiron *,
+#bodies use.Pholus *,
 #bodies use.Ceres *,
 #bodies use.Pallas *,
 #bodies use.Juno *,
 #bodies use.Vesta *,
-#bodies line.Chiron, 
-#bodies line.Pholus, 
-#bodies line.Ceres, 
-#bodies line.Pallas, 
-#bodies line.Juno, 
+#bodies line.Chiron,
+#bodies line.Pholus,
+#bodies line.Ceres,
+#bodies line.Pallas,
+#bodies line.Juno,
 #bodies line.Vesta {
 	stroke:#800;
 }
 
-#bodies text.Chiron, 
-#bodies text.Pholus, 
-#bodies text.Ceres, 
-#bodies text.Pallas, 
-#bodies text.Juno, 
+#bodies text.Chiron,
+#bodies text.Pholus,
+#bodies text.Ceres,
+#bodies text.Pallas,
+#bodies text.Juno,
 #bodies text.Vesta {
 	fill:#800;
 }
@@ -232,4 +232,3 @@ defs g#Vesta *,
 	stroke:#b58c00;
 	fill:#f8f8c1;
 }
-
